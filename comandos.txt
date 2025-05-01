@@ -1,0 +1,19 @@
+# 1. Remove past installations and cache
+
+rm -rf node_modules package-lock.json .expo
+
+# 2. Install Expo bare minimum (core dependencies)
+
+npx expo install expo@~53.0.4 react@18.2.0 react-dom@18.2.0 react-native@0.70.9 react-native-web@~0.18.12
+
+# 3. Install essential complementary libraries
+
+npx expo install expo-status-bar@~1.8.2 react-native-gesture-handler@~2.12.0 react-native-safe-area-context@4.7.2
+
+# 4. Initialize a fresh install
+
+npm install
+
+# 5. Start the project with cache clean
+
+npx expo start -c
