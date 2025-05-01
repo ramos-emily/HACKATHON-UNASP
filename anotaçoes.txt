@@ -1,0 +1,24 @@
+tela login: Email e senha, criar
+
+cadastro: Email, senha, confirmação senha
+
+perfil -> data nascimento, peso, altura, Nome , foto
+
+Home 
+8 remédios representatividade
+gráficos de desempenho do usuário com base nos questionários e seu IMC
+
+
+Questionario (8 paginas, uma pra cada, elas serão links da pagina home em seu respectivo remedio)
+
+
+
+
+npx expo start --clear
+
+
+
+
+
+
+
