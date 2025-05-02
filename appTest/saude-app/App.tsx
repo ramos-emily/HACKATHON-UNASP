@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
+import Welcome from './pages/Welcome';
 import Login from './pages/Login';
+import Register from './pages/Register';
 import Home from './pages/Home';
 import Profile from './pages/Profile';
 import Favorites from './pages/Favorites';
@@ -11,36 +13,59 @@ import Sun from './pages/Quiz/Sun';
 import Trust from './pages/Quiz/Trust';
 import Rest from './pages/Quiz/Rest';
 import Temperance from './pages/Quiz/Temperance';
+import CleanAir from './pages/Quiz/CleanAir';
 
 export default function App() {
-  const [currentScreen, setCurrentScreen] = useState('login');
+  const [currentScreen, setCurrentScreen] = useState('welcome');
   const [user] = useState('MARIA DA SILVA');
+  const [previousScreen, setPreviousScreen] = useState<string | null>(null);
+
+  const navigateTo = (screen: string) => {
+    setPreviousScreen(currentScreen);
+    setCurrentScreen(screen);
+  };
+
+  const goBack = () => {
+    if (previousScreen) {
+      setCurrentScreen(previousScreen);
+      setPreviousScreen(null);
+    }
+  };
 
   const screens = {
-        Nutrition: <Nutrition onBack={() => setCurrentScreen('favorites')} />,
-        Exercise: <Exercise onBack={() => setCurrentScreen('favorites')} />,
-        Water: <Water onBack={() => setCurrentScreen('favorites')} />,
-        Sun: <Sun onBack={() => setCurrentScreen('favorites')} />,
-        Trust: <Trust onBack={() => setCurrentScreen('favorites')} />,
-        Rest: <Rest onBack={() => setCurrentScreen('favorites')} />,
-
-        Temperance: <Temperance onBack={() => setCurrentScreen('favorites')} />,
-    login: <Login onLogin={() => setCurrentScreen('home')} />,
+    welcome: <Welcome onGetStarted={() => navigateTo('login')} />,
+    login: <Login
+            onLogin={() => navigateTo('home')}
+            onBack={() => navigateTo('welcome')}
+            onSignup={() => navigateTo('register')}
+           />,
+    register: <Register onBack={() => navigateTo('login')} />,
     home: (
       <Home
         user={user}
-        onProfile={() => setCurrentScreen('profile')}
-        onFavorites={() => setCurrentScreen('favorites')}
-        onLogout={() => setCurrentScreen('login')}
+        onProfile={() => navigateTo('profile')}
+        onFavorites={() => navigateTo('favorites')}
+        onLogout={() => navigateTo('welcome')}
       />
     ),
-    profile: <Profile onBack={() => setCurrentScreen('home')} user={user} />,
-    favorites: <Favorites onBack={() => setCurrentScreen('home')} />
+    profile: <Profile onBack={goBack} user={user} />,
+    favorites: <Favorites
+      onBack={goBack}
+      onNavigate={(screen: string) => navigateTo(screen)}
+    />,
+    Nutrition: <Nutrition onBack={goBack} />,
+    Exercise: <Exercise onBack={goBack} />,
+    Water: <Water onBack={goBack} />,
+    Sun: <Sun onBack={goBack} />,
+    Trust: <Trust onBack={goBack} />,
+    Rest: <Rest onBack={goBack} />,
+    Temperance: <Temperance onBack={goBack} />,
+    CleanAir: <CleanAir onBack={goBack} />,
   };
 
   return (
     <View style={styles.container}>
-      {screens[currentScreen]}
+      {screens[currentScreen as keyof typeof screens]}
     </View>
   );
 }

@@ -1,25 +1,21 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
-interface FavoritesProps {
-  onBack: () => void;
-  navigation: {
-    navigate: (screen: string) => void;
-  };
-}
-
 const remedies = [
-  { name: 'Nutrição', screen: 'Nutrition' },
-  { name: 'Exercício', screen: 'Exercise' },
-  { name: 'Água', screen: 'Water' },
-  { name: 'Luz Solar', screen: 'Sun' },
-  { name: 'Confiança', screen: 'Trust' },
-  { name: 'Descanso', screen: 'Rest' },
-  { name: 'Ar Puro', screen: 'CleanAir' },
-  { name: 'Temperança', screen: 'Temperance' }
+  { name: 'Nutrição', screen: 'Nutrition', color: '#4CAF50' },
+  { name: 'Exercício', screen: 'Exercise', color: '#2196F3' },
+  { name: 'Água', screen: 'Water', color: '#00BCD4' },
+  { name: 'Luz Solar', screen: 'Sun', color: '#FFC107' },
+  { name: 'Confiança', screen: 'Trust', color: '#9C27B0' },
+  { name: 'Descanso', screen: 'Rest', color: '#607D8B' },
+  { name: 'Ar Puro', screen: 'CleanAir', color: '#8BC34A' },
+  { name: 'Temperança', screen: 'Temperance', color: '#FF5722' }
 ];
 
-export default function Favorites({ onBack, navigation }: FavoritesProps) {
+export default function Favorites({ onBack, onNavigate }: {
+  onBack: () => void,
+  onNavigate: (screen: string) => void
+}) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>8 REMÉDIOS NATURAIS</Text>
@@ -28,8 +24,8 @@ export default function Favorites({ onBack, navigation }: FavoritesProps) {
         {remedies.map((remedy, index) => (
           <TouchableOpacity
             key={index}
-            style={styles.remedyButton}
-            onPress={() => navigation.navigate(remedy.screen)}
+            style={[styles.remedyButton, { backgroundColor: remedy.color }]}
+            onPress={() => onNavigate(remedy.screen)}
           >
             <Text style={styles.remedyText}>{remedy.name}</Text>
           </TouchableOpacity>
@@ -66,21 +62,22 @@ const styles = StyleSheet.create({
     height: 100,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#e3f2fd',
     borderRadius: 10,
     marginBottom: 15,
-    borderWidth: 1,
-    borderColor: '#bbdefb',
+    elevation: 3,
   },
   remedyText: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#1976d2',
+    fontSize: 18,
+    fontWeight: '600',
+    color: 'white',
+    textShadowColor: 'rgba(0,0,0,0.2)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
   },
   backButton: {
     marginTop: 20,
     padding: 15,
-    backgroundColor: '#2196F3',
+    backgroundColor: '#795548',
     borderRadius: 8,
     alignItems: 'center',
   },

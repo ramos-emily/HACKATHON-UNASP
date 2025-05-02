@@ -11,7 +11,7 @@
     "doctor": "expo doctor"
   },
   "dependencies": {
-    "expo": "~49.0.0",
+    "expo": "latest",
     "expo-status-bar": "~1.4.0",
     "react": "18.2.0",
     "react-native": "0.72.0",

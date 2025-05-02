@@ -1,14 +1,18 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+
+const ProfileIcon = require('../assets/ProfileIcon.png');
+const LogoIcon = require('../assets/LogoIcon.png');
+const FavoriteIcon = require('../assets/FavoriteIcon.png');
 
 interface HomeProps {
   user: string;
   onProfile: () => void;
   onFavorites: () => void;
-  onLogout: () => void;
+  onHome: () => void;
 }
 
-export default function Home({ user, onProfile, onFavorites, onLogout }: HomeProps) {
+export default function Home({ user, onProfile, onFavorites, onHome }: HomeProps) {
   return (
     <View style={styles.container}>
       <View style={styles.content}>
@@ -18,17 +22,26 @@ export default function Home({ user, onProfile, onFavorites, onLogout }: HomePro
 
       <View style={styles.footer}>
         <TouchableOpacity style={styles.footerButton} onPress={onProfile}>
-          <Text style={styles.footerIcon}>👤</Text>
+          <Image
+            source={ProfileIcon}
+            style={styles.footerIcon}
+          />
           <Text style={styles.footerText}>Perfil</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.footerButton} onPress={onLogout}>
-          <Text style={styles.footerIcon}>🚪</Text>
-          <Text style={styles.footerText}>Sair</Text>
+        <TouchableOpacity style={styles.footerButton} onPress={onHome}>
+          <Image
+            source={LogoIcon}
+            style={styles.footerIcon}
+          />
+          <Text style={styles.footerText}>Home</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.footerButton} onPress={onFavorites}>
-          <Text style={styles.footerIcon}>❤️</Text>
+          <Image
+            source={FavoriteIcon}
+            style={styles.footerIcon}
+          />
           <Text style={styles.footerText}>Questionários</Text>
         </TouchableOpacity>
       </View>
@@ -65,18 +78,20 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     borderTopWidth: 1,
     borderTopColor: '#eee',
-    backgroundColor: '#f8f8f8',
+    backgroundColor: '#003878',
   },
   footerButton: {
     alignItems: 'center',
     padding: 10,
   },
   footerIcon: {
-    fontSize: 24,
+    width: 24,
+    height: 24,
+    resizeMode: 'contain',
     marginBottom: 5,
   },
   footerText: {
     fontSize: 12,
-    color: '#555',
+    color: '#fff',
   },
 });

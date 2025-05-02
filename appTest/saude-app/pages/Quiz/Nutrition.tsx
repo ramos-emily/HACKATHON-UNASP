@@ -1,16 +1,13 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
-interface QuizProps {
-  onBack: () => void;
-}
-
-export default function Nutrition({ onBack }: QuizProps) {
+export default function Nutrition({ onBack }: { onBack: () => void }) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Questionário: Nutrição</Text>
 
-      {/* Adicione aqui o conteúdo específico do questionário */}
+      {/* Conteúdo do questionário aqui */}
+      <Text>Perguntas sobre nutrição...</Text>
 
       <TouchableOpacity style={styles.backButton} onPress={onBack}>
         <Text style={styles.backText}>Voltar</Text>
@@ -35,7 +32,7 @@ const styles = StyleSheet.create({
   backButton: {
     marginTop: 20,
     padding: 15,
-    backgroundColor: '#2196F3',
+    backgroundColor: '#4CAF50',
     borderRadius: 8,
     alignItems: 'center',
   },

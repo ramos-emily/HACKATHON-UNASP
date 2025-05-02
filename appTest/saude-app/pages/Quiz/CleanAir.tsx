@@ -1,13 +1,13 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
-export default function Exercise({ onBack }: { onBack: () => void }) {
+export default function CleanAir({ onBack }: { onBack: () => void }) {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Questionário: Exercise</Text>
+      <Text style={styles.title}>Questionário: Ar puro</Text>
 
       {/* Conteúdo do questionário aqui */}
-      <Text>Perguntas sobre exercicios...</Text>
+      <Text>Perguntas sobre ar puro...</Text>
 
       <TouchableOpacity style={styles.backButton} onPress={onBack}>
         <Text style={styles.backText}>Voltar</Text>
