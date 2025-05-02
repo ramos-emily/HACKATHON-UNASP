@@ -1,21 +1,16 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
-interface ProfileProps {
+interface QuizProps {
   onBack: () => void;
-  user: string;
 }
 
-export default function Profile({ onBack, user }: ProfileProps) {
+export default function Nutrition({ onBack }: QuizProps) {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>PERFIL</Text>
-      <Text style={styles.user}>{user}</Text>
+      <Text style={styles.title}>Questionário: Nutrição</Text>
 
-      <View style={styles.infoContainer}>
-        <Text style={styles.label}>Data de nascimento:</Text>
-        <Text style={styles.value}>22-01-2007</Text>
-      </View>
+      {/* Adicione aqui o conteúdo específico do questionário */}
 
       <TouchableOpacity style={styles.backButton} onPress={onBack}>
         <Text style={styles.backText}>Voltar</Text>
@@ -35,26 +30,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
-  },
-  user: {
-    fontSize: 20,
-    fontWeight: '600',
-    marginBottom: 30,
-    textAlign: 'center',
-  },
-  infoContainer: {
-    marginBottom: 15,
-  },
-  label: {
-    fontSize: 16,
-    color: '#666',
-  },
-  value: {
-    fontSize: 16,
-    fontWeight: '500',
+    color: '#2c3e50',
   },
   backButton: {
-    marginTop: 30,
+    marginTop: 20,
     padding: 15,
     backgroundColor: '#2196F3',
     borderRadius: 8,

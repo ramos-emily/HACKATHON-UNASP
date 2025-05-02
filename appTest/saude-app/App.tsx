@@ -1,42 +1,46 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { View, StyleSheet } from 'react-native';
+import Login from './pages/Login';
 import Home from './pages/Home';
 import Profile from './pages/Profile';
 import Favorites from './pages/Favorites';
+import Nutrition from './pages/Quiz/Nutrition';
+import Exercise from './pages/Quiz/Exercise';
+import Water from './pages/Quiz/Water';
+import Sun from './pages/Quiz/Sun';
+import Trust from './pages/Quiz/Trust';
+import Rest from './pages/Quiz/Rest';
+import Temperance from './pages/Quiz/Temperance';
 
 export default function App() {
-  const [currentScreen, setCurrentScreen] = React.useState('login');
-  const [user, setUser] = React.useState('Maria da Silva');
+  const [currentScreen, setCurrentScreen] = useState('login');
+  const [user] = useState('MARIA DA SILVA');
 
-  const goToHome = () => setCurrentScreen('home');
-  const goToProfile = () => setCurrentScreen('profile');
-  const goToFavorites = () => setCurrentScreen('favorites');
-  const logout = () => setCurrentScreen('login');
+  const screens = {
+        Nutrition: <Nutrition onBack={() => setCurrentScreen('favorites')} />,
+        Exercise: <Exercise onBack={() => setCurrentScreen('favorites')} />,
+        Water: <Water onBack={() => setCurrentScreen('favorites')} />,
+        Sun: <Sun onBack={() => setCurrentScreen('favorites')} />,
+        Trust: <Trust onBack={() => setCurrentScreen('favorites')} />,
+        Rest: <Rest onBack={() => setCurrentScreen('favorites')} />,
+
+        Temperance: <Temperance onBack={() => setCurrentScreen('favorites')} />,
+    login: <Login onLogin={() => setCurrentScreen('home')} />,
+    home: (
+      <Home
+        user={user}
+        onProfile={() => setCurrentScreen('profile')}
+        onFavorites={() => setCurrentScreen('favorites')}
+        onLogout={() => setCurrentScreen('login')}
+      />
+    ),
+    profile: <Profile onBack={() => setCurrentScreen('home')} user={user} />,
+    favorites: <Favorites onBack={() => setCurrentScreen('home')} />
+  };
 
   return (
     <View style={styles.container}>
-      <StatusBar style="auto" />
-
-      {currentScreen === 'login' ? (
-        <View style={styles.mainScreen}>
-          <Text style={styles.title}>Página de Login</Text>
-          <TouchableOpacity style={styles.button} onPress={goToHome}>
-            <Text style={styles.buttonText}>Entrar</Text>
-          </TouchableOpacity>
-        </View>
-      ) : currentScreen === 'home' ? (
-        <Home
-          user={user}
-          onNavigateProfile={goToProfile}
-          onNavigateFavorites={goToFavorites}
-          onLogout={logout}
-        />
-      ) : currentScreen === 'profile' ? (
-        <Profile onGoBack={goToHome} user={user} />
-      ) : (
-        <Favorites onGoBack={goToHome} />
-      )}
+      {screens[currentScreen]}
     </View>
   );
 }
@@ -44,31 +48,6 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f0f4ff',
-  },
-  mainScreen: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 30,
-    color: '#2c3e50',
-  },
-  button: {
-    backgroundColor: '#3498db',
-    padding: 15,
-    borderRadius: 10,
-    width: '100%',
-    maxWidth: 300,
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 16,
+    backgroundColor: '#fff',
   },
 });

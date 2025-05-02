@@ -1,30 +1,23 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
-export default function Home({
-  user,
-  onNavigateProfile,
-  onNavigateFavorites,
-  onLogout
-}: {
+interface HomeProps {
   user: string;
-  onNavigateProfile: () => void;
-  onNavigateFavorites: () => void;
+  onProfile: () => void;
+  onFavorites: () => void;
   onLogout: () => void;
-}) {
+}
+
+export default function Home({ user, onProfile, onFavorites, onLogout }: HomeProps) {
   return (
     <View style={styles.container}>
-      {/* Conteúdo principal */}
       <View style={styles.content}>
         <Text style={styles.header}>{user}</Text>
         <Text style={styles.subheader}>RESUMO E SUAS ATIVIDADES</Text>
-
-        {/* Seu conteúdo existente aqui */}
       </View>
 
-      {/* Footer */}
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.footerButton} onPress={onNavigateProfile}>
+        <TouchableOpacity style={styles.footerButton} onPress={onProfile}>
           <Text style={styles.footerIcon}>👤</Text>
           <Text style={styles.footerText}>Perfil</Text>
         </TouchableOpacity>
@@ -34,9 +27,9 @@ export default function Home({
           <Text style={styles.footerText}>Sair</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.footerButton} onPress={onNavigateFavorites}>
+        <TouchableOpacity style={styles.footerButton} onPress={onFavorites}>
           <Text style={styles.footerIcon}>❤️</Text>
-          <Text style={styles.footerText}>Favoritos</Text>
+          <Text style={styles.footerText}>Questionários</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -51,16 +44,19 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     padding: 20,
+    justifyContent: 'center',
   },
   header: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 10,
+    textAlign: 'center',
   },
   subheader: {
     fontSize: 18,
     color: '#666',
-    marginBottom: 20,
+    marginBottom: 30,
+    textAlign: 'center',
   },
   footer: {
     flexDirection: 'row',
@@ -73,6 +69,7 @@ const styles = StyleSheet.create({
   },
   footerButton: {
     alignItems: 'center',
+    padding: 10,
   },
   footerIcon: {
     fontSize: 24,
