@@ -38,7 +38,10 @@ export default function App() {
             onLogin={() => navigateTo('home')}
             onSignup={() => navigateTo('register')}
            />,
-    register: <Register onBack={() => navigateTo('login')} />,
+           register: <Register 
+           onBack={() => navigateTo('login')} 
+           onRegister={() => navigateTo('home')} 
+         />,
     home: (
       <Home
       onProfile={() => navigateTo('profile')}

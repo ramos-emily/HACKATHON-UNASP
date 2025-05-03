@@ -1,29 +1,41 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, TextInput, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
+import { 
+  View, 
+  Text, 
+  TouchableOpacity, 
+  TextInput, 
+  StyleSheet,
+  KeyboardAvoidingView, 
+  Platform,
+  Image 
+} from 'react-native';
 
 interface RegisterProps {
   onBack: () => void;
+  onRegister: () => void;
 }
 
-export default function Register({ onBack }: RegisterProps) {
+export default function Register({ onBack, onRegister }: RegisterProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleRegister = () => {
+  const handleContinue = () => {
     if (!email || !password || !confirmPassword) {
       alert('Por favor, preencha todos os campos');
       return;
     }
+    
     if (password !== confirmPassword) {
       alert('As senhas não coincidem');
       return;
     }
+    
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
-      onBack();
+      onRegister();
     }, 1500);
   };
 
@@ -32,15 +44,15 @@ export default function Register({ onBack }: RegisterProps) {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}
     >
-      <View style={styles.innerContainer}>
-        <Text style={styles.title}>Criar conta</Text>
-        <Text style={styles.subtitle}>Preencha os dados para se cadastrar</Text>
-
+      <View style={styles.content}>
+        <Image source={require('../assets/logowelcome.png')} style={styles.logo} />
+        <Text style={styles.brand}>Daily Health</Text>
+        <Text style={styles.title}>Cadastro</Text>
+      
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>E-mail</Text>
           <TextInput
             style={styles.input}
-            placeholder="Digite seu e-mail"
+            placeholder="Email"
             placeholderTextColor="#999"
             keyboardType="email-address"
             autoCapitalize="none"
@@ -50,10 +62,9 @@ export default function Register({ onBack }: RegisterProps) {
         </View>
 
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>Senha</Text>
           <TextInput
             style={styles.input}
-            placeholder="Digite sua senha"
+            placeholder="Senha"
             placeholderTextColor="#999"
             secureTextEntry
             value={password}
@@ -62,10 +73,9 @@ export default function Register({ onBack }: RegisterProps) {
         </View>
 
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>Confirmar Senha</Text>
           <TextInput
             style={styles.input}
-            placeholder="Confirme sua senha"
+            placeholder="Confirmação de senha"
             placeholderTextColor="#999"
             secureTextEntry
             value={confirmPassword}
@@ -75,16 +85,19 @@ export default function Register({ onBack }: RegisterProps) {
 
         <TouchableOpacity
           style={[styles.button, isLoading && styles.buttonDisabled]}
-          onPress={handleRegister}
+          onPress={handleContinue}
           disabled={isLoading}
         >
           <Text style={styles.buttonText}>
-            {isLoading ? 'CADASTRANDO...' : 'CADASTRAR'}
+            {isLoading ? 'CARREGANDO...' : 'Continue'}
           </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={onBack}>
-          <Text style={styles.loginText}>Já tem uma conta? <Text style={styles.loginLink}>Faça login</Text></Text>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={onBack}
+        >
+          <Text style={styles.backButtonText}>Voltar para Login</Text>
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
@@ -94,34 +107,37 @@ export default function Register({ onBack }: RegisterProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
-  },
-  innerContainer: {
-    flex: 1,
     justifyContent: 'center',
-    padding: 20,
+    alignItems: 'center',
+    backgroundColor: '#fff',
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 8,
-    color: '#333',
-    textAlign: 'center',
+  content: {
+    width: '100%',
+    padding: 40,
+    alignItems: 'center',
   },
-  subtitle: {
-    fontSize: 16,
-    color: '#666',
-    marginBottom: 40,
-    textAlign: 'center',
+  logo: {
+    width: 206,
+    height: 215,
+    resizeMode: 'contain',
+    marginBottom: 15,
+    marginTop: 70,
   },
-  inputContainer: {
+  brand: {
+    fontSize: 45,
+    color: '#000000',
+    fontFamily: 'Inter',
     marginBottom: 20,
   },
-  label: {
-    fontSize: 14,
-    color: '#333',
-    marginBottom: 8,
-    fontWeight: '500',
+  title: {
+    fontSize: 35,
+    color: '#003878',
+    marginBottom: 40,
+    fontWeight: 'bold',
+  },
+  inputContainer: {
+    width: '100%',
+    marginBottom: 20,
   },
   input: {
     backgroundColor: '#fff',
@@ -135,6 +151,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#003878',
     padding: 16,
     borderRadius: 8,
+    width: '100%',
     alignItems: 'center',
     marginTop: 20,
   },
@@ -143,16 +160,16 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: 'white',
-    fontWeight: 'bold',
     fontSize: 16,
+    fontWeight: 'bold',
   },
-  loginText: {
-    color: '#666',
-    textAlign: 'center',
-    marginTop: 20,
+  backButton: {
+    marginTop: 15,
+    padding: 10,
   },
-  loginLink: {
+  backButtonText: {
     color: '#003878',
+    fontSize: 14,
     fontWeight: 'bold',
   },
 });

@@ -15,7 +15,7 @@ export default function Welcome({ onGetStarted }: WelcomeProps) {
     >
       <Text style={styles.title}>Seja Bem-Vindo</Text>
       < Image source={require('../assets/logowelcome.png')} style={styles.logo} />
-      <Text style={styles.brand}>BlueLeaf Health</Text>
+      <Text style={styles.brand}>Daily Health</Text>
       <Text style={styles.subtitle}>Conectando você ao seu{'\n'}bem-estar!</Text>
 
 
