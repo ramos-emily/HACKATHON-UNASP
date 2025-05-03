@@ -1,96 +1,105 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import Footer from '../components/Footer'; 
-
-const remedies = [
-  { name: 'Nutrição', screen: 'Nutrition', color: '#4CAF50' },
-  { name: 'Exercício', screen: 'Exercise', color: '#2196F3' },
-  { name: 'Água', screen: 'Water', color: '#00BCD4' },
-  { name: 'Luz Solar', screen: 'Sun', color: '#FFC107' },
-  { name: 'Confiança', screen: 'Trust', color: '#9C27B0' },
-  { name: 'Descanso', screen: 'Rest', color: '#607D8B' },
-  { name: 'Ar Puro', screen: 'CleanAir', color: '#8BC34A' },
-  { name: 'Temperança', screen: 'Temperance', color: '#FF5722' }
-];
+import { View, Image, Text, StyleSheet, ScrollView } from 'react-native';
+import RemedioCard from '../components/Home';
+import Footer from '../components/Footer';
 
 interface HomeProps {
-  user: string;
   onProfile: () => void;
-  onFavorites: () => void;
   onHome: () => void;
-  onBack: () => void;
-  onNavigate: (screen: string) => void;
+  onFavorites: () => void;
 }
 
-export default function Home({ user, onProfile, onFavorites, onHome, onBack, onNavigate }: HomeProps) {
+export default function TelaHome({ onProfile, onHome, onFavorites }: HomeProps) {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>8 REMÉDIOS NATURAIS</Text>
+    <View style={styles.screen}>
+      <ScrollView contentContainerStyle={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.headerText}>Homepage</Text>
+        </View>
+        <Image source={require('../assets/LogoHome.png')} style={styles.logo} resizeMode="contain" />
+        <Image source={require('../assets/Q8RM.png')} style={styles.q8rm} resizeMode="contain" />
+        <Text style={styles.descricao}>
+          O Questionário dos 8 Remédios Naturais não é apenas um programa; é um estilo de vida. Quando os 8 componentes estão devidamente alinhados, combinados e aplicados de forma consistente, demonstram repetidamente seu poder não apenas para melhorar condições de saúde, mas para transformar vidas de maneira positiva e duradoura.
+          {'\n\n'}
+          Descubra a seguir, de maneira mais detalhada, como cada um desses elementos pode fazer a diferença na sua vida.
+        </Text>
 
-      <View style={styles.grid}>
-        {remedies.map((remedy, index) => (
-          <TouchableOpacity
-            key={index}
-            style={[styles.remedyButton, { backgroundColor: remedy.color }]}
-            onPress={() => onNavigate(remedy.screen)}
-          >
-            <Text style={styles.remedyText}>{remedy.name}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-
-      <TouchableOpacity style={styles.backButton} onPress={onBack}>
-        <Text style={styles.backText}>Voltar</Text>
-      </TouchableOpacity>
-
+        {/* Cards dos Remédios Naturais */}
+        <RemedioCard
+          imagem={require('../assets/waterHome.png')}
+          texto="Como o corpo é composto por 70% de água, manter-se bem hidratado e saber o que e quando beber são essenciais para a saúde. A hidroterapia (água aplicada externamente ao corpo), seguida de massagem, melhora a circulação e o sistema imunológico de maneiras surpreendentes."
+        />
+        <RemedioCard
+          imagem={require('../assets/arHome.png')}
+          texto="O ar é o recurso mais essencial do corpo — mais vital que a comida ou a água. Em cidades poluídas, respirar ar puro é um verdadeiro remédio: melhora a oxigenação do cérebro, que consome 20% do oxigênio que respiramos, e ajuda a reduzir o cortisol, diminuindo o estresse e a ansiedade."
+        />
+        <RemedioCard
+          imagem={require('../assets/nutricaoHome.png')}
+          texto="O intestino afeta diretamente o funcionamento do nosso cérebro — por isso, dizemos que somos o que comemos. Uma alimentação desequilibrada pode contribuir para problemas como ansiedade, depressão e dificuldades cognitivas, enquanto uma dieta balanceada, rica em frutas, verduras, legumes, grãos integrais, sementes e alimentos naturais, favorece o bem-estar mental e emocional. Cuidar da alimentação é essencial não só para o corpo, mas também para a mente."
+        />
+        <RemedioCard
+          imagem={require('../assets/luzHome.png')}
+          texto="A exposição ao sol estimula a produção de vitamina D, essencial para a imunidade, saúde dos ossos e regulação do humor. Também melhora o sono e os níveis de energia ao equilibrar o relógio biológico. Então, que tal aproveitar alguns minutinhos de sol perto do meio-dia e cuidar da sua saúde de forma natural e revigorante?"
+        />
+        <RemedioCard
+          imagem={require('../assets/temperancaHome.png')}
+          texto="Usar coisas boas com moderação e evitar o que faz mal é uma escolha sábia, embora nem sempre fácil. A temperança é um presente de Deus, um fruto do Espírito (Gálatas 5:22, 23), que protege contra vícios, melhora a saúde mental, fortalece os relacionamentos e equilibra o uso de telas. Viver com moderação é viver com mais liberdade, paz e qualidade de vida."
+        />
+        <RemedioCard
+          imagem={require('../assets/exercicioHome.png')}
+          texto="A ação é uma lei da vida. O tônus e a força muscular se perdem sem esforço, mas o exercício melhora a saúde do corpo, da mente e do espírito, multiplicando a vitalidade e o bem-estar. A terapia por meio da atividade física inclui exercícios ao ar livre, avaliações em esteira e alongamentos. Em Loma Linda, idosos com mais de 90 anos vivem com vitalidade através dos 8 Remédios Naturais, mostrando que nossos hábitos atuais moldam uma velhice saudável e cheia de energia."
+        />
+        <RemedioCard
+          imagem={require('../assets/descansoHome.png')}
+          texto='"Deus ajuda quem cedo madruga" não é apenas um ditado, mas um princípio vital, pois a restauração requer descanso, e o sono permite que o corpo se renove. Durante o sono, o corpo se recupera, fortalece o sistema imunológico e o cérebro processa informações, consolidando memórias e regulando as emoções.'
+        />
+        <RemedioCard
+          imagem={require('../assets/confiancaHome.png')}
+          texto='Estudos mostram que a prática espiritual fortalece o sistema imunológico, melhora a saúde cardiovascular e promove longevidade, além de trazer propósito e reduzir a ansiedade. "Confia no Senhor de todo o teu coração" (Provérbios 3:5-6). Deus convida você a descansar Nele, entregando suas preocupações e renovando corpo e mente com Sua paz.'
+        />
+      </ScrollView>
       <Footer onProfile={onProfile} onHome={onHome} onFavorites={onFavorites} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  screen: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#d7f0ff',
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
-    color: '#2c3e50',
-  },
-  grid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-  },
-  remedyButton: {
-    width: '48%',
-    height: 100,
+  header: {
+    width: '100%',
+    height: 75,
+    backgroundColor: '#ffffff',
+    alignItems: 'center',
     justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 10,
-    marginBottom: 15,
-    elevation: 3,
+    marginBottom: 20,
   },
-  remedyText: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: 'white',
-    textShadowColor: 'rgba(0,0,0,0.2)',
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 2,
-  },
-  backButton: {
-    marginTop: 20,
-    padding: 15,
-    backgroundColor: '#795548',
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  backText: {
-    color: 'white',
+  headerText: {
+    fontSize: 32,
     fontWeight: 'bold',
+    color: '#007ED5', 
+  },
+  container: {
+    alignItems: 'center',
+    paddingBottom: 40,
+  },
+  logo: {
+    width: '100%',
+    height: 500, 
+    marginBottom: 20,
+  },
+  q8rm: {
+    width: 200,
+    height: 200,
+    marginBottom: 20,
+  },
+  descricao: {
+    fontSize: 22,
+    textAlign: 'center',
+    color: '#002233',
+    lineHeight: 22,
+    marginBottom: 20,
   },
 });
