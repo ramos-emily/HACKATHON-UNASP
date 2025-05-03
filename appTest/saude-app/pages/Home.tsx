@@ -1,50 +1,49 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import Footer from '../components/Footer'; 
 
-const ProfileIcon = require('../assets/ProfileIcon.png');
-const LogoIcon = require('../assets/LogoIcon.png');
-const FavoriteIcon = require('../assets/FavoriteIcon.png');
+const remedies = [
+  { name: 'Nutrição', screen: 'Nutrition', color: '#4CAF50' },
+  { name: 'Exercício', screen: 'Exercise', color: '#2196F3' },
+  { name: 'Água', screen: 'Water', color: '#00BCD4' },
+  { name: 'Luz Solar', screen: 'Sun', color: '#FFC107' },
+  { name: 'Confiança', screen: 'Trust', color: '#9C27B0' },
+  { name: 'Descanso', screen: 'Rest', color: '#607D8B' },
+  { name: 'Ar Puro', screen: 'CleanAir', color: '#8BC34A' },
+  { name: 'Temperança', screen: 'Temperance', color: '#FF5722' }
+];
 
 interface HomeProps {
   user: string;
   onProfile: () => void;
   onFavorites: () => void;
   onHome: () => void;
+  onBack: () => void;
+  onNavigate: (screen: string) => void;
 }
 
-export default function Home({ user, onProfile, onFavorites, onHome }: HomeProps) {
+export default function Home({ user, onProfile, onFavorites, onHome, onBack, onNavigate }: HomeProps) {
   return (
     <View style={styles.container}>
-      <View style={styles.content}>
-        <Text style={styles.header}>{user}</Text>
-        <Text style={styles.subheader}>RESUMO E SUAS ATIVIDADES</Text>
+      <Text style={styles.title}>8 REMÉDIOS NATURAIS</Text>
+
+      <View style={styles.grid}>
+        {remedies.map((remedy, index) => (
+          <TouchableOpacity
+            key={index}
+            style={[styles.remedyButton, { backgroundColor: remedy.color }]}
+            onPress={() => onNavigate(remedy.screen)}
+          >
+            <Text style={styles.remedyText}>{remedy.name}</Text>
+          </TouchableOpacity>
+        ))}
       </View>
 
-      <View style={styles.footer}>
-        <TouchableOpacity style={styles.footerButton} onPress={onProfile}>
-          <Image
-            source={ProfileIcon}
-            style={styles.footerIcon}
-          />
-          <Text style={styles.footerText}>Perfil</Text>
-        </TouchableOpacity>
+      <TouchableOpacity style={styles.backButton} onPress={onBack}>
+        <Text style={styles.backText}>Voltar</Text>
+      </TouchableOpacity>
 
-        <TouchableOpacity style={styles.footerButton} onPress={onHome}>
-          <Image
-            source={LogoIcon}
-            style={styles.footerIcon}
-          />
-          <Text style={styles.footerText}>Home</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.footerButton} onPress={onFavorites}>
-          <Image
-            source={FavoriteIcon}
-            style={styles.footerIcon}
-          />
-          <Text style={styles.footerText}>Questionários</Text>
-        </TouchableOpacity>
-      </View>
+      <Footer onProfile={onProfile} onHome={onHome} onFavorites={onFavorites} />
     </View>
   );
 }
@@ -54,44 +53,44 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  content: {
-    flex: 1,
-    padding: 20,
-    justifyContent: 'center',
-  },
-  header: {
+  title: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: 20,
     textAlign: 'center',
+    color: '#2c3e50',
   },
-  subheader: {
-    fontSize: 18,
-    color: '#666',
-    marginBottom: 30,
-    textAlign: 'center',
-  },
-  footer: {
+  grid: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+  },
+  remedyButton: {
+    width: '48%',
+    height: 100,
+    justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: 15,
-    borderTopWidth: 1,
-    borderTopColor: '#eee',
-    backgroundColor: '#003878',
+    borderRadius: 10,
+    marginBottom: 15,
+    elevation: 3,
   },
-  footerButton: {
+  remedyText: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: 'white',
+    textShadowColor: 'rgba(0,0,0,0.2)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
+  },
+  backButton: {
+    marginTop: 20,
+    padding: 15,
+    backgroundColor: '#795548',
+    borderRadius: 8,
     alignItems: 'center',
-    padding: 10,
   },
-  footerIcon: {
-    width: 24,
-    height: 24,
-    resizeMode: 'contain',
-    marginBottom: 5,
-  },
-  footerText: {
-    fontSize: 12,
-    color: '#fff',
+  backText: {
+    color: 'white',
+    fontWeight: 'bold',
   },
 });

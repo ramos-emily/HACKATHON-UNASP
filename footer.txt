@@ -1,60 +1,10 @@
-import { View, TouchableOpacity, Text, Image, StyleSheet } from 'react-native';
+import Footer from '../components/Footer';
 
-// Adicione estas linhas no topo do arquivo de cada página
-const ProfileIcon = require('../assets/ProfileIcon.png');
-const HomeIcon = require('../assets/LogoIcon.png'); // Renomeie se tiver um ícone específico para Home
-const FavoriteIcon = require('../assets/FavoriteIcon.png');
+interface PageProps {
+  onProfile: () => void;
+  onHome: () => void;
+  onFavorites: () => void;
+}
 
-// Adicione esta constante de estilos em cada página (pode ser no final do arquivo)
-const footerStyles = StyleSheet.create({
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    paddingVertical: 15,
-    borderTopWidth: 1,
-    borderTopColor: '#eee',
-    backgroundColor: '#003878',
-  },
-  footerButton: {
-    alignItems: 'center',
-    padding: 10,
-  },
-  footerIcon: {
-    width: 24,
-    height: 24,
-    resizeMode: 'contain',
-    marginBottom: 5,
-  },
-  footerText: {
-    fontSize: 12,
-    color: '#fff',
-  },
-});
 
-// Cole este bloco no final do return de cada página (dentro do View principal)
-<View style={footerStyles.footer}>
-  <TouchableOpacity 
-    style={footerStyles.footerButton} 
-    onPress={() => navigation.navigate('Profile')} // Ou sua função onProfile
-  >
-    <Image source={ProfileIcon} style={footerStyles.footerIcon} />
-    <Text style={footerStyles.footerText}>Perfil</Text>
-  </TouchableOpacity>
-
-  <TouchableOpacity 
-    style={footerStyles.footerButton} 
-    onPress={() => navigation.navigate('Home')} // Ou sua função onHome
-  >
-    <Image source={HomeIcon} style={footerStyles.footerIcon} />
-    <Text style={footerStyles.footerText}>Home</Text>
-  </TouchableOpacity>
-
-  <TouchableOpacity 
-    style={footerStyles.footerButton} 
-    onPress={() => navigation.navigate('Questionarios')} // Ou sua função onFavorites
-  >
-    <Image source={FavoriteIcon} style={footerStyles.footerIcon} />
-    <Text style={footerStyles.footerText}>Questionários</Text>
-  </TouchableOpacity>
-</View>
+<Footer onProfile={onProfile} onHome={onHome} onFavorites={onFavorites} />

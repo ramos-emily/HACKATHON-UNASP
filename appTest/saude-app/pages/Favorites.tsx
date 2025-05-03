@@ -1,88 +1,200 @@
+// Favorites.tsx
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
+import ResultItem from '../components/Favorito';
+import Footer from '../components/Footer';
 
-const remedies = [
-  { name: 'Nutrição', screen: 'Nutrition', color: '#4CAF50' },
-  { name: 'Exercício', screen: 'Exercise', color: '#2196F3' },
-  { name: 'Água', screen: 'Water', color: '#00BCD4' },
-  { name: 'Luz Solar', screen: 'Sun', color: '#FFC107' },
-  { name: 'Confiança', screen: 'Trust', color: '#9C27B0' },
-  { name: 'Descanso', screen: 'Rest', color: '#607D8B' },
-  { name: 'Ar Puro', screen: 'CleanAir', color: '#8BC34A' },
-  { name: 'Temperança', screen: 'Temperance', color: '#FF5722' }
-];
+interface FavoritesProps {
+  onProfile: () => void;
+  onHome: () => void;
+  onFavorites: () => void;
+}
 
-export default function Favorites({ onBack, onNavigate }: {
-  onBack: () => void,
-  onNavigate: (screen: string) => void
-}) {
+export default function Favorites({ onProfile, onHome, onFavorites }: FavoritesProps) {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>8 REMÉDIOS NATURAIS</Text>
-
-      <View style={styles.grid}>
-        {remedies.map((remedy, index) => (
-          <TouchableOpacity
-            key={index}
-            style={[styles.remedyButton, { backgroundColor: remedy.color }]}
-            onPress={() => onNavigate(remedy.screen)}
-          >
-            <Text style={styles.remedyText}>{remedy.name}</Text>
-          </TouchableOpacity>
-        ))}
+    <View>
+    <ScrollView contentContainerStyle={styles.container}>
+      {/* Header */}
+      <View style={styles.header}>
+        <Image source={require('../assets/resultados_header.png')} style={styles.icon} />
       </View>
 
-      <TouchableOpacity style={styles.backButton} onPress={onBack}>
-        <Text style={styles.backText}>Voltar</Text>
-      </TouchableOpacity>
+      {/* Total */}
+      <View style={styles.totalContainer}>
+        <View style={styles.resultadosBox}>
+          <Text style={styles.headerTitle}>RESULTADOS</Text>
+        </View>
+        <Text style={styles.totalLabel}>TOTAL</Text>
+        <View style={styles.totalBox}>
+        <ResultItem
+        imageSource={require('../assets/LogoFavorites.png')}
+        title=""
+        value="/150"
+
+      />
+        </View>
+      </View>
+
+      <View style={styles.dividerLine} />
+
+      <Text style={styles.sectionTitle}>ANÁLISES CORPORAIS</Text>
+
+      {/* Itens */}
+      <ResultItem
+        imageSource={require('../assets/pressao.png')}
+        title="Pressão Arterial"
+        value="12/8"
+      />
+
+      <ResultItem
+        imageSource={require('../assets/imc.png')}
+        title="IMC"
+        value="12.5 a 24.9"
+        idealText=""
+      />
+
+      <ResultItem
+        imageSource={require('../assets/peso.png')}
+        title="PCI"
+        value="Variável"
+      />
+
+      <ResultItem
+        imageSource={require('../assets/cintura.png')}
+        title="RCQ"
+        value="M = 0.85"
+      />
+
+      <ResultItem
+        imageSource={require('../assets/arcabouco.png')}
+        title="Arcabouço Corporal"
+        value="Variável"
+      />
+
+      <View style={styles.dividerLine} />
+      <Text style={styles.sectionTitle}>POR CATEGORIA</Text>
+
+      <ResultItem
+        imageSource={require('../assets/iconWater.png')}
+        title=""
+        value="15"
+      />
+      <ResultItem
+        imageSource={require('../assets/iconAr.png')}
+        title=""
+        value="10"
+      />
+      <ResultItem
+        imageSource={require('../assets/iconMaca.png')}
+        title=""
+        value="15"
+      />
+      <ResultItem
+        imageSource={require('../assets/iconSol.png')}
+        title=""
+        value="10"
+      />
+      <ResultItem
+        imageSource={require('../assets/iconJustica.png')}
+        title=""
+        value="40"
+      />
+      <ResultItem
+        imageSource={require('../assets/iconCoracao.png')}
+        title=""
+        value="15"
+      />
+      <ResultItem
+        imageSource={require('../assets/iconLua.png')}
+        title=""
+        value="20"
+      />
+      <ResultItem
+        imageSource={require('../assets/iconCruz.png')}
+        title=""
+        value="25"
+      />
+    </ScrollView>
+    <Footer onProfile={onProfile} onHome={onHome} onFavorites={onFavorites} />
     </View>
+    
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: '#d7f0ff',
+    alignItems: 'stretch',
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
-    color: '#2c3e50',
-  },
-  grid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-  },
-  remedyButton: {
-    width: '48%',
-    height: 100,
+  header: {
+    width: '100%',
+    height: 75,
+    backgroundColor: '#ffffff',
+    alignItems: 'center',
     justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 10,
-    marginBottom: 15,
-    elevation: 3,
+    marginBottom: 20,
   },
-  remedyText: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: 'white',
-    textShadowColor: 'rgba(0,0,0,0.2)',
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 2,
+  icon: {
+    width: 100,
+    height: 100,
+    resizeMode: 'contain',
   },
-  backButton: {
-    marginTop: 20,
-    padding: 15,
-    backgroundColor: '#795548',
-    borderRadius: 8,
-    alignItems: 'center',
+  resultadosBox: {
+    backgroundColor: '#007ED5',
+    paddingHorizontal: 70,
+    paddingVertical: 10,
+    width: '90%',
+    borderRadius: 20,
+    alignSelf: 'center',
+    marginBottom: 20,
   },
-  backText: {
-    color: 'white',
+  headerTitle: {
+    fontSize: 25,
     fontWeight: 'bold',
+    color: 'white',
+    textAlign: 'center',
+  },
+  totalLabel: {
+    fontSize: 20,
+    color: '#003878',
+    marginBottom: 16,
+    fontWeight: '600',
+  },
+  totalContainer: {
+    padding: 16,
+    borderRadius: 12,
+    alignItems: 'center',
+    marginBottom: 32,
+    backgroundColor: '#d7f0ff',
+  },
+  
+  totalBox: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+  },
+  totalText: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  totalMax: {
+    fontSize: 18,
+    marginLeft: 4,
+    color: '#333',
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#003878',
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  dividerLine: {
+    height: 15,
+    borderRadius: 10,
+    backgroundColor: '#007ED5',
+    width: '97%',
+    alignSelf: 'center',
+    marginVertical: 20,
   },
 });

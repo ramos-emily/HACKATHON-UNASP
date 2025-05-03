@@ -36,7 +36,6 @@ export default function App() {
     welcome: <Welcome onGetStarted={() => navigateTo('login')} />,
     login: <Login
             onLogin={() => navigateTo('home')}
-            onBack={() => navigateTo('welcome')}
             onSignup={() => navigateTo('register')}
            />,
     register: <Register onBack={() => navigateTo('login')} />,
