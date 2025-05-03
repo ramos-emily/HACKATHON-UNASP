@@ -41,16 +41,21 @@ export default function App() {
     register: <Register onBack={() => navigateTo('login')} />,
     home: (
       <Home
-        user={user}
-        onProfile={() => navigateTo('profile')}
-        onFavorites={() => navigateTo('favorites')}
-        onLogout={() => navigateTo('welcome')}
-      />
+      onProfile={() => navigateTo('profile')}
+      onHome={() => navigateTo('home')} 
+      onFavorites={() => navigateTo('favorites')}
+      onNavigation={(screen) => navigateTo(screen)}
+    />
     ),
-    profile: <Profile onBack={goBack} user={user} />,
+    profile: <Profile 
+      onBack={goBack} 
+      user={user} 
+      onSave={() => navigateTo('home')}
+    />,
     favorites: <Favorites
-      onBack={goBack}
-      onNavigate={(screen: string) => navigateTo(screen)}
+      onProfile={() => navigateTo('profile')}
+      onHome={() => navigateTo('home')}
+      onFavorites={() => navigateTo('favorites')}
     />,
     Nutrition: <Nutrition onBack={goBack} />,
     Exercise: <Exercise onBack={goBack} />,

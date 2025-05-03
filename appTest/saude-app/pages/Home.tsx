@@ -1,5 +1,13 @@
 import React from 'react';
-import { View, Image, Text, StyleSheet, ScrollView } from 'react-native';
+import {
+  View,
+  ImageBackground,
+  Image,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
 import RemedioCard from '../components/Home';
 import Footer from '../components/Footer';
 
@@ -7,17 +15,45 @@ interface HomeProps {
   onProfile: () => void;
   onHome: () => void;
   onFavorites: () => void;
+  onNavigation: (destination: string) => void;
 }
 
-export default function TelaHome({ onProfile, onHome, onFavorites }: HomeProps) {
+export default function TelaHome({ onProfile, onHome, onFavorites, onNavigation }: HomeProps) {
   return (
     <View style={styles.screen}>
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.header}>
           <Text style={styles.headerText}>Homepage</Text>
         </View>
-        <Image source={require('../assets/LogoHome.png')} style={styles.logo} resizeMode="contain" />
+
+        {/* Imagem com botão sobreposto */}
+        <ImageBackground
+          source={require('../assets/LogoHome.png')}
+          style={styles.logoContainer}
+          resizeMode="contain"
+        >
+          <TouchableOpacity style={styles.botaoAgua} onPress={() => onNavigation('Water')}>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.botaoAr} onPress={() => onNavigation('CleanAir')}>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.botaoNutri} onPress={() => onNavigation('Nutrition')}>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.botaoSol} onPress={() => onNavigation('Sun')}>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.botaoTemp} onPress={() => onNavigation('Temperance')}>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.botaoExe} onPress={() => onNavigation('Exercise')}>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.botaoDes} onPress={() => onNavigation('Rest')}>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.botaoCf} onPress={() => onNavigation('Trust')}>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.botaoPlay} onPress={() => onNavigation('Trust')}>
+          </TouchableOpacity>
+        </ImageBackground>
+
         <Image source={require('../assets/Q8RM.png')} style={styles.q8rm} resizeMode="contain" />
+
         <Text style={styles.descricao}>
           O Questionário dos 8 Remédios Naturais não é apenas um programa; é um estilo de vida. Quando os 8 componentes estão devidamente alinhados, combinados e aplicados de forma consistente, demonstram repetidamente seu poder não apenas para melhorar condições de saúde, mas para transformar vidas de maneira positiva e duradoura.
           {'\n\n'}
@@ -58,6 +94,7 @@ export default function TelaHome({ onProfile, onHome, onFavorites }: HomeProps) 
           texto='Estudos mostram que a prática espiritual fortalece o sistema imunológico, melhora a saúde cardiovascular e promove longevidade, além de trazer propósito e reduzir a ansiedade. "Confia no Senhor de todo o teu coração" (Provérbios 3:5-6). Deus convida você a descansar Nele, entregando suas preocupações e renovando corpo e mente com Sua paz.'
         />
       </ScrollView>
+
       <Footer onProfile={onProfile} onHome={onHome} onFavorites={onFavorites} />
     </View>
   );
@@ -79,16 +116,99 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#007ED5', 
+    color: '#007ED5',
   },
   container: {
     alignItems: 'center',
     paddingBottom: 40,
   },
-  logo: {
+  logoContainer: {
     width: '100%',
-    height: 500, 
+    aspectRatio: 1.5,
+    justifyContent: 'center',
+    alignItems: 'center',
     marginBottom: 20,
+  },
+  botaoPlay: {
+    position: 'absolute',
+    top: '45%',
+    right: '43%',
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+    borderRadius: 8,
+    zIndex: 10,
+  },
+  botaoAgua: {
+    position: 'absolute',
+    top: '25%',
+    right: '28%',
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+    borderRadius: 8,
+    zIndex: 10,
+  },
+  botaoAr: {
+    position: 'absolute',
+    top: '45%',
+    right: '25%',
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+    borderRadius: 8,
+    zIndex: 10,
+  },
+  botaoNutri: {
+    position: 'absolute',
+    top: '65%',
+    right: '30%',
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+    borderRadius: 8,
+    zIndex: 10,
+  },
+  botaoSol: {
+    position: 'absolute',
+    top: '73%',
+    right: '45%',
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+    borderRadius: 8,
+    zIndex: 10,
+  },
+  botaoTemp: {
+    position: 'absolute',
+    top: '65%',
+    right: '58%',
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+    borderRadius: 8,
+    zIndex: 10,
+  },
+  botaoExe: {
+    position: 'absolute',
+    top: '43%',
+    right: '62%',
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+    borderRadius: 8,
+    zIndex: 10,
+  },
+  botaoDes: {
+    position: 'absolute',
+    top: '22%',
+    right: '58%',
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+    borderRadius: 8,
+    zIndex: 10,
+  },
+  botaoCf: {
+    position: 'absolute',
+    top: '15%',
+    right: '45%',
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+    borderRadius: 8,
+    zIndex: 10,
   },
   q8rm: {
     width: 200,
@@ -101,5 +221,6 @@ const styles = StyleSheet.create({
     color: '#002233',
     lineHeight: 22,
     marginBottom: 20,
+    paddingHorizontal: 20,
   },
 });

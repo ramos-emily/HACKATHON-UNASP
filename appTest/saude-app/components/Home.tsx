@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   imagem: {
-    width: '100%',
+    width: '90%',
     aspectRatio: 1.5, 
     alignSelf: 'center',
   },
