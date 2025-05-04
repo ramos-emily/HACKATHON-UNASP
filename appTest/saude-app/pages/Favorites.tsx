@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Modal } from 'react-native';
 import ResultItem from '../components/Favorito';
 import Footer from '../components/Footer';
 import { getQuizResults, calculateTotalScore } from '../services/mockStorage';
+import SimpleHealthBot from '../components/SimpleHealthBot';
+import { mockFirestore } from '../services/mockFirestore';
 
 interface FavoritesProps {
   onProfile: () => void;
@@ -10,7 +12,6 @@ interface FavoritesProps {
   onFavorites: () => void;
 }
 
-// Valores ideais para cada categoria
 const idealScores = {
   nutrition: '25',
   water: '20',
@@ -22,7 +23,6 @@ const idealScores = {
   cleanAir: '10'
 };
 
-// Ícones para cada categoria
 const categoryIcons = {
   nutrition: require('../assets/iconMaca.png'),
   water: require('../assets/iconWater.png'),
@@ -38,20 +38,23 @@ export default function Favorites({ onProfile, onHome, onFavorites }: FavoritesP
   const [results, setResults] = useState<any>({});
   const [totalScore, setTotalScore] = useState(0);
   const [bodyAnalysis, setBodyAnalysis] = useState<any>(null);
+  const [healthResults, setHealthResults] = useState<any>({});
+  const [chatVisible, setChatVisible] = useState(false);
 
   useEffect(() => {
     const quizData = getQuizResults();
     setResults(quizData);
     setTotalScore(calculateTotalScore());
     
-    // Obtém os dados de análise corporal da página Exercise
     if (quizData.exercise?.bodyAnalysis) {
       setBodyAnalysis(quizData.exercise.bodyAnalysis);
     }
+
+    const healthData = mockFirestore.getHealthResults();
+    setHealthResults(healthData);
   }, []);
 
-  // Dados padrão caso não tenha sido preenchido o questionário
-  const defaultBodyAnalysis = {
+  const currentAnalysis = bodyAnalysis || {
     pressureClassification: '--',
     imcClassification: '--',
     imc: '--',
@@ -59,8 +62,6 @@ export default function Favorites({ onProfile, onHome, onFavorites }: FavoritesP
     rcq: '--',
     frame: '--'
   };
-
-  const currentAnalysis = bodyAnalysis || defaultBodyAnalysis;
 
   return (
     <View style={styles.mainContainer}>
@@ -113,7 +114,6 @@ export default function Favorites({ onProfile, onHome, onFavorites }: FavoritesP
         <View style={styles.divider} />
         <Text style={styles.sectionTitle}>POR CATEGORIA</Text>
         
-        {/* Exibe apenas os questionários respondidos */}
         {Object.entries(results).map(([quizName, quizData]: [string, any]) => (
           <ResultItem
             key={quizName}
@@ -124,6 +124,32 @@ export default function Favorites({ onProfile, onHome, onFavorites }: FavoritesP
           />
         ))}
       </ScrollView>
+
+      {/* Botão flutuante do chatbot */}
+      <TouchableOpacity 
+        style={styles.chatButton}
+        onPress={() => setChatVisible(true)}
+      >
+        <Image 
+          source={require('../assets/LogoFavorites.png')} 
+          style={styles.chatButtonImage}
+        />
+      </TouchableOpacity>
+
+      {/* Modal do chatbot */}
+      <Modal
+  visible={chatVisible}
+  animationType="slide"
+  transparent={true}
+  onRequestClose={() => setChatVisible(false)}
+>
+  <View style={styles.modalContainer}>
+    <SimpleHealthBot
+      userResults={healthResults}
+      onClose={() => setChatVisible(false)}
+    />
+  </View>
+</Modal>
       
       <Footer onProfile={onProfile} onHome={onHome} onFavorites={onFavorites} />
     </View>
@@ -187,5 +213,31 @@ const styles = StyleSheet.create({
     color: '#003878',
     textAlign: 'center',
     marginVertical: 10,
+  },
+  chatButton: {
+    position: 'absolute',
+    right: 20,
+    bottom: 80, // Acima do footer
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: '#007ED5',
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  chatButtonImage: {
+    width: 40,
+    height: 40,
+    resizeMode: 'contain',
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    backgroundColor: 'rgba(0,0,0,0.5)',
   },
 });
