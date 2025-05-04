@@ -60,14 +60,62 @@ export default function App() {
       onHome={() => navigateTo('home')}
       onFavorites={() => navigateTo('favorites')}
     />,
-    Nutrition: <Nutrition onBack={goBack} />,
-    Exercise: <Exercise onBack={goBack} />,
-    Water: <Water onBack={goBack} />,
-    Sun: <Sun onBack={goBack} />,
-    Trust: <Trust onBack={goBack} />,
-    Rest: <Rest onBack={goBack} />,
-    Temperance: <Temperance onBack={goBack} />,
-    CleanAir: <CleanAir onBack={goBack} />,
+    Nutrition: <Nutrition
+    onBack={goBack}
+    onNext={() => navigateTo('Exercise')}
+    onProfile={() => navigateTo('profile')}
+    onHome={() => navigateTo('home')} 
+    onFavorites={() => navigateTo('favorites')}
+    />,
+    Exercise: <Exercise
+    onBack={goBack}
+    onNext={() => navigateTo('Water')}
+    onProfile={() => navigateTo('profile')}
+    onHome={() => navigateTo('home')} 
+    onFavorites={() => navigateTo('favorites')}
+    />,
+    Water: <Water 
+    onBack={goBack}
+    onNext={() => navigateTo('Sun')}
+    onProfile={() => navigateTo('profile')}
+    onHome={() => navigateTo('home')} 
+    onFavorites={() => navigateTo('favorites')}
+    />,
+    Sun: <Sun 
+    onBack={goBack}
+    onNext={() => navigateTo('Trust')}
+    onProfile={() => navigateTo('profile')}
+    onHome={() => navigateTo('home')} 
+    onFavorites={() => navigateTo('favorites')}
+    />,
+    Trust: <Trust 
+    onBack={goBack}
+    onNext={() => navigateTo('Rest')}
+    onProfile={() => navigateTo('profile')}
+    onHome={() => navigateTo('home')} 
+    onFavorites={() => navigateTo('favorites')}
+    />,
+    Rest: <Rest 
+    onBack={goBack}
+    onNext={() => navigateTo('Temperance')}
+    onProfile={() => navigateTo('profile')}
+    onHome={() => navigateTo('home')} 
+    onFavorites={() => navigateTo('favorites')}
+    />,
+    Temperance: <Temperance 
+    onBack={goBack}
+    onNext={() => navigateTo('CleanAir')}
+    onProfile={() => navigateTo('profile')}
+    onHome={() => navigateTo('home')} 
+    onFavorites={() => navigateTo('favorites')}
+    />,
+    CleanAir: <CleanAir 
+    onBack={goBack}
+    onNext={() => navigateTo('favorites')}
+    onProfile={() => navigateTo('profile')}
+    onHome={() => navigateTo('home')} 
+    onFavorites={() => navigateTo('favorites')}
+    />,
   };
 
   return (
