@@ -36,9 +36,13 @@ const SimpleHealthBot: React.FC<HealthBotProps> = ({ userResults, onClose }) => 
   }, [messages]);
 
   const questions = [
-    'Como estou?',
     'Como posso melhorar?',
     'Oi!',
+    'Estou indo bem?',
+    'Como dormir melhor?',
+    'Como reduzir o estresse?',
+    'O que é uma boa alimentação?',
+    'Por que cuidar da saúde?',
   ];
 
   const handleQuestionClick = (question: string) => {
@@ -51,17 +55,41 @@ const SimpleHealthBot: React.FC<HealthBotProps> = ({ userResults, onClose }) => 
   const generateResponse = (question: string) => {
     const lower = question.toLowerCase();
 
-    if (lower.includes('como estou') || lower.includes('resultados')) {
+    if (lower.includes('como estou') || lower.includes('estou indo bem'))
       return analyzeHealthStatus();
-    }
-    if (lower.includes('melhorar') || lower.includes('dicas')) {
-      return generateImprovementTips();
-    }
-    if (lower.includes('oi') || lower.includes('olá')) {
-      return 'Olá! Como posso te ajudar com sua saúde hoje?';
-    }
 
-    return 'Toque em uma pergunta abaixo para continuar.';
+    if (
+      lower.includes('melhorar') ||
+      lower.includes('dicas') ||
+      lower.includes('bem-estar')
+    )
+      return generateImprovementTips();
+
+    if (lower.includes('oi'))
+      return 'Olá! Pronto para cuidar da sua saúde hoje? 😊';
+
+    if (lower.includes('dormir melhor'))
+      return 'Tente manter uma rotina de horários, evitar telas antes de dormir e criar um ambiente escuro e silencioso.';
+
+    if (lower.includes('beber mais água'))
+      return 'Leve uma garrafinha com você, defina lembretes e associe a água a hábitos (como beber ao acordar).';
+
+    if (lower.includes('reduzir o estresse'))
+      return 'Respire fundo, caminhe ao ar livre, ouça música calma e tenha momentos de lazer. Meditação ajuda muito!';
+
+    if (lower.includes('boa alimentação'))
+      return 'Inclua frutas, legumes, grãos integrais e evite excesso de açúcar, sal e alimentos ultraprocessados.';
+
+    if (lower.includes('quantas horas') && lower.includes('dormir'))
+      return 'Adultos devem dormir de 7 a 9 horas por noite. Priorize a qualidade do sono!';
+
+    if (lower.includes('me exercitar'))
+      return 'Caminhar, pedalar, dançar ou fazer alongamentos já ajudam! Encontre uma atividade que você goste.';
+
+    if (lower.includes('por que') && lower.includes('cuidar da saúde'))
+      return 'Cuidar da saúde melhora sua disposição, humor, previne doenças e aumenta sua qualidade de vida. ❤️';
+
+    return 'Desculpe, não entendi. Tente tocar em uma das perguntas abaixo.';
   };
 
   const analyzeHealthStatus = () => {
@@ -80,17 +108,17 @@ const SimpleHealthBot: React.FC<HealthBotProps> = ({ userResults, onClose }) => 
   };
 
   const generateImprovementTips = () => {
-    const tips = [];
+    const tips: string[] = [];
 
-    if (userResults.stressLevel && userResults.stressLevel > 5)
+    if (userResults.stressLevel != null && userResults.stressLevel > 5)
       tips.push('- Faça respiração profunda todos os dias.');
-    if (userResults.sleepQuality && userResults.sleepQuality < 6)
+    if (userResults.sleepQuality != null && userResults.sleepQuality < 6)
       tips.push('- Tente dormir e acordar nos mesmos horários.');
-    if (userResults.nutritionScore && userResults.nutritionScore < 30)
+    if (userResults.nutritionScore != null && userResults.nutritionScore < 30)
       tips.push('- Coma mais frutas e vegetais.');
-    if (userResults.exerciseScore && userResults.exerciseScore < 20)
+    if (userResults.exerciseScore != null && userResults.exerciseScore < 20)
       tips.push('- Caminhe 30 minutos por dia.');
-    if (userResults.waterIntake && userResults.waterIntake < 2)
+    if (userResults.waterIntake != null && userResults.waterIntake < 2)
       tips.push('- Beba pelo menos 2L de água por dia.');
 
     if (tips.length === 0) return 'Você está indo muito bem! Continue assim.';
@@ -98,7 +126,10 @@ const SimpleHealthBot: React.FC<HealthBotProps> = ({ userResults, onClose }) => 
   };
 
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={styles.modalContainer}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      style={styles.modalContainer}
+    >
       <View style={styles.chatContainer}>
         <View style={styles.header}>
           <Text style={styles.headerText}>Assistente de Saúde</Text>
@@ -126,7 +157,11 @@ const SimpleHealthBot: React.FC<HealthBotProps> = ({ userResults, onClose }) => 
 
         <View style={styles.buttonContainer}>
           {questions.map((q) => (
-            <TouchableOpacity key={q} style={styles.questionButton} onPress={() => handleQuestionClick(q)}>
+            <TouchableOpacity
+              key={q}
+              style={styles.questionButton}
+              onPress={() => handleQuestionClick(q)}
+            >
               <Text style={styles.questionText}>{q}</Text>
             </TouchableOpacity>
           ))}
@@ -143,7 +178,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.5)',
   },
   chatContainer: {
-    height: '60%',
+    height: '75%',
     backgroundColor: '#d7f0ff',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
@@ -161,6 +196,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: '#003878',
+    textAlign: 'center',
   },
   closeButtonText: {
     fontSize: 18,
@@ -173,9 +209,9 @@ const styles = StyleSheet.create({
   },
   messageBubble: {
     maxWidth: '80%',
-    padding: 10,
+    padding: 15,
     borderRadius: 12,
-    marginBottom: 6,
+    marginBottom: 15,
   },
   botBubble: {
     alignSelf: 'flex-start',
@@ -190,23 +226,26 @@ const styles = StyleSheet.create({
   messageText: {
     fontSize: 16,
     color: '#003878',
+    lineHeight: 22,
   },
   buttonContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     marginTop: 10,
   },
   questionButton: {
     backgroundColor: '#007ED5',
-    paddingHorizontal: 15,
-    paddingVertical: 10,
+    paddingHorizontal: 18,
+    paddingVertical: 12,
     borderRadius: 20,
-    marginVertical: 5,
+    marginVertical: 6,
+    width: '48%',
   },
   questionText: {
     color: 'white',
     fontSize: 14,
+    textAlign: 'center',
   },
 });
 

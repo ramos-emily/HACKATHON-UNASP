@@ -1,5 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Modal } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { 
+  View, 
+  Text, 
+  StyleSheet, 
+  Image, 
+  ScrollView, 
+  TouchableOpacity, 
+  Modal, 
+  Animated,
+  NativeScrollEvent,
+  NativeSyntheticEvent
+} from 'react-native';
 import ResultItem from '../components/Favorito';
 import Footer from '../components/Footer';
 import { getQuizResults, calculateTotalScore } from '../services/mockStorage';
@@ -40,6 +51,21 @@ export default function Favorites({ onProfile, onHome, onFavorites }: FavoritesP
   const [bodyAnalysis, setBodyAnalysis] = useState<any>(null);
   const [healthResults, setHealthResults] = useState<any>({});
   const [chatVisible, setChatVisible] = useState(false);
+  
+  const scrollY = useRef(new Animated.Value(0)).current;
+  const scrollViewRef = useRef<ScrollView>(null);
+
+  // Configuração ajustada para posicionar mais acima
+  const buttonY = scrollY.interpolate({
+    inputRange: [0, 50],  // Range menor para animação mais rápida
+    outputRange: [70, 20], // Inicia em 70px (mais perto do header) e fixa em 20px
+    extrapolate: 'clamp'
+  });
+
+  const handleScroll = Animated.event(
+    [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+    { useNativeDriver: true }
+  );
 
   useEffect(() => {
     const quizData = getQuizResults();
@@ -65,11 +91,37 @@ export default function Favorites({ onProfile, onHome, onFavorites }: FavoritesP
 
   return (
     <View style={styles.mainContainer}>
-      <ScrollView contentContainerStyle={styles.container}>
-        <View style={styles.header}>
-          <Image source={require('../assets/resultados_header.png')} style={styles.headerIcon} />
-        </View>
+      {/* Cabeçalho fixo */}
+      <View style={styles.header}>
+        <Image source={require('../assets/resultados_header.png')} style={styles.headerIcon} />
+      </View>
 
+      {/* Botão flutuante posicionado antes do ScrollView */}
+      <Animated.View style={[
+        styles.chatButton,
+        {
+          transform: [{ translateY: buttonY }],
+          top: 70 // Posição inicial ajustada para mais perto do header
+        }
+      ]}>
+        <TouchableOpacity 
+          onPress={() => setChatVisible(true)}
+          style={styles.chatButtonTouchable}
+        >
+          <Image 
+            source={require('../assets/LogoFavorites.png')} 
+            style={styles.chatButtonImage}
+          />
+        </TouchableOpacity>
+      </Animated.View>
+
+      {/* Área de conteúdo rolável */}
+      <Animated.ScrollView
+        ref={scrollViewRef}
+        contentContainerStyle={[styles.scrollContent, { paddingTop: 80 }]} // Padding ajustado
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
+      >
         <View style={styles.totalContainer}>
           <View style={styles.resultadosBox}>
             <Text style={styles.headerTitle}>RESULTADOS</Text>
@@ -123,33 +175,22 @@ export default function Favorites({ onProfile, onHome, onFavorites }: FavoritesP
             idealText={idealScores[quizName as keyof typeof idealScores]}
           />
         ))}
-      </ScrollView>
-
-      {/* Botão flutuante do chatbot */}
-      <TouchableOpacity 
-        style={styles.chatButton}
-        onPress={() => setChatVisible(true)}
-      >
-        <Image 
-          source={require('../assets/LogoFavorites.png')} 
-          style={styles.chatButtonImage}
-        />
-      </TouchableOpacity>
+      </Animated.ScrollView>
 
       {/* Modal do chatbot */}
       <Modal
-  visible={chatVisible}
-  animationType="slide"
-  transparent={true}
-  onRequestClose={() => setChatVisible(false)}
->
-  <View style={styles.modalContainer}>
-    <SimpleHealthBot
-      userResults={healthResults}
-      onClose={() => setChatVisible(false)}
-    />
-  </View>
-</Modal>
+        visible={chatVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setChatVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <SimpleHealthBot
+            userResults={healthResults}
+            onClose={() => setChatVisible(false)}
+          />
+        </View>
+      </Modal>
       
       <Footer onProfile={onProfile} onHome={onHome} onFavorites={onFavorites} />
     </View>
@@ -161,15 +202,19 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#d7f0ff',
   },
-  container: {
-    paddingBottom: 20,
+  scrollContent: {
+    paddingBottom: 80,
   },
   header: {
     height: 80,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#fff',
-    marginBottom: 10,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 10,
   },
   headerIcon: {
     width: 200,
@@ -193,6 +238,7 @@ const styles = StyleSheet.create({
   totalContainer: {
     alignItems: 'center',
     marginVertical: 10,
+    marginTop: 20,
   },
   totalLabel: {
     fontSize: 18,
@@ -217,7 +263,6 @@ const styles = StyleSheet.create({
   chatButton: {
     position: 'absolute',
     right: 20,
-    bottom: 80, // Acima do footer
     width: 60,
     height: 60,
     borderRadius: 30,
@@ -229,6 +274,13 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
+    zIndex: 100,
+  },
+  chatButtonTouchable: {
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   chatButtonImage: {
     width: 40,
