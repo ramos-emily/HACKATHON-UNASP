@@ -9,6 +9,7 @@ import {
   Platform,
   Image 
 } from 'react-native';
+import { mockAuth as auth } from '../services/mockAuth';
 
 interface RegisterProps {
   onBack: () => void;
@@ -21,22 +22,16 @@ export default function Register({ onBack, onRegister }: RegisterProps) {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleContinue = () => {
-    if (!email || !password || !confirmPassword) {
-      alert('Por favor, preencha todos os campos');
-      return;
-    }
-    
-    if (password !== confirmPassword) {
-      alert('As senhas não coincidem');
-      return;
-    }
-    
+  const handleContinue = async () => {
     setIsLoading(true);
-    setTimeout(() => {
+    try {
+      await auth.createUserWithEmailAndPassword(email, password);
+      onRegister(); // Navega para Home
+    } catch (error) {
+      console.log('Erro simulado (não se preocupe)');
+    } finally {
       setIsLoading(false);
-      onRegister();
-    }, 1500);
+    }
   };
 
   return (

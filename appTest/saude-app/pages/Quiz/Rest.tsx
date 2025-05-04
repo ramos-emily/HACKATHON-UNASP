@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { View, Image, StyleSheet, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Image, StyleSheet, Text, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import Footer from '../../components/Footer';
+import { saveQuizResult } from '../../services/mockStorage';
 
 interface RestProps {
   onBack: () => void;
@@ -16,13 +17,59 @@ export default function Rest({ onBack, onNext, onProfile, onFavorites, onHome }:
   const [selectedOption3, setSelectedOption3] = useState<number | null>(null);
   const [selectedOption4, setSelectedOption4] = useState<number | null>(null);
 
-  const airOptions = [
-    { label: 'Nunca', icon: require('../../assets/nuncaIcon.png') },
-    { label: 'Quase nunca', icon: require('../../assets/iconQuaseNunca.png') },
-    { label: 'Algumas vezes', icon: require('../../assets/algumasVezes.png') },
-    { label: 'Muitas vezes', icon: require('../../assets/muitasVezes.png') },
-    { label: 'Sempre', icon: require('../../assets/iconSempre.png') },
+  const sleepOptions = [
+    { label: 'Nunca', value: 0, icon: require('../../assets/nuncaIcon.png') },
+    { label: 'Quase nunca', value: 1, icon: require('../../assets/iconQuaseNunca.png') },
+    { label: 'Algumas vezes', value: 2, icon: require('../../assets/algumasVezes.png') },
+    { label: 'Muitas vezes', value: 3, icon: require('../../assets/muitasVezes.png') },
+    { label: 'Sempre', value: 4, icon: require('../../assets/iconSempre.png') },
   ];
+
+  const calculateScore = () => {
+    let score = 0;
+    
+    // Pontuação para cada pergunta (0 a 4) * peso
+    if (selectedOption1 !== null) {
+      score += sleepOptions[selectedOption1].value * 5; // Peso maior para primeira pergunta
+    }
+    
+    if (selectedOption2 !== null) {
+      score += sleepOptions[selectedOption2].value * 4;
+    }
+    
+    if (selectedOption3 !== null) {
+      // Invertido pois distúrbios são negativos
+      score += (4 - sleepOptions[selectedOption3].value) * 3;
+    }
+    
+    if (selectedOption4 !== null) {
+      score += sleepOptions[selectedOption4].value * 3;
+    }
+    
+    return score;
+  };
+
+  const handleNext = () => {
+    if (selectedOption1 === null || selectedOption2 === null || 
+        selectedOption3 === null || selectedOption4 === null) {
+      Alert.alert('Atenção', 'Por favor, responda todas as perguntas');
+      return;
+    }
+  
+    const result = {
+      answers: {
+        sleepQuality: sleepOptions[selectedOption1].label,
+        earlySleep: sleepOptions[selectedOption2].label,
+        sleepDisorders: sleepOptions[selectedOption3].label,
+        beforeMidnight: sleepOptions[selectedOption4].label
+      },
+      score: calculateScore()
+    };
+  
+    saveQuizResult('rest', result);
+    
+    if (onNext) onNext();
+  };
 
   return (
     <View>
@@ -33,13 +80,13 @@ export default function Rest({ onBack, onNext, onProfile, onFavorites, onHome }:
 
         <Image source={require('../../assets/descanso_banner.png')} style={styles.banner} />
 
-        {/* Pergunta 1 */}
+        {/* Pergunta 1 - Qualidade do sono */}
         <View style={styles.questionBox}>
           <Text style={styles.questionText}>
             Você dorme de 7 a 8 horas por noite e acorda descansado e com boa disposição na maioria das vezes?
           </Text>
           <View style={styles.optionsContainer}>
-            {airOptions.map((option, index) => (
+            {sleepOptions.map((option, index) => (
               <TouchableOpacity
                 key={`q1-${index}`}
                 style={[styles.option, selectedOption1 === index && styles.selectedOption]}
@@ -52,9 +99,9 @@ export default function Rest({ onBack, onNext, onProfile, onFavorites, onHome }:
           <View style={styles.lineWrapper}>
             <View style={styles.line} />
             <View style={styles.lineContainer}>
-              {airOptions.map((_, index) => (
+              {sleepOptions.map((_, index) => (
                 <TouchableOpacity
-                  key={`q1-${index}`}
+                  key={`q1-dot-${index}`}
                   style={[styles.dot, selectedOption1 === index && styles.selectedDot]}
                   onPress={() => setSelectedOption1(index)}
                 />
@@ -63,11 +110,11 @@ export default function Rest({ onBack, onNext, onProfile, onFavorites, onHome }:
           </View>
         </View>
 
-        {/* Pergunta 2 */}
+        {/* Pergunta 2 - Dormir cedo */}
         <View style={styles.questionBox}>
           <Text style={styles.questionText}>Você costuma dormir cedo por volta das 22h?</Text>
           <View style={styles.optionsContainer}>
-            {airOptions.map((option, index) => (
+            {sleepOptions.map((option, index) => (
               <TouchableOpacity
                 key={`q2-${index}`}
                 style={[styles.option, selectedOption2 === index && styles.selectedOption]}
@@ -80,9 +127,9 @@ export default function Rest({ onBack, onNext, onProfile, onFavorites, onHome }:
           <View style={styles.lineWrapper}>
             <View style={styles.line} />
             <View style={styles.lineContainer}>
-              {airOptions.map((_, index) => (
+              {sleepOptions.map((_, index) => (
                 <TouchableOpacity
-                  key={`q2-${index}`}
+                  key={`q2-dot-${index}`}
                   style={[styles.dot, selectedOption2 === index && styles.selectedDot]}
                   onPress={() => setSelectedOption2(index)}
                 />
@@ -91,11 +138,11 @@ export default function Rest({ onBack, onNext, onProfile, onFavorites, onHome }:
           </View>
         </View>
 
-        {/* Pergunta 3 */}
+        {/* Pergunta 3 - Distúrbios do sono */}
         <View style={styles.questionBox}>
           <Text style={styles.questionText}>Você costuma ter algum distúrbio ou acordar antes do sono?</Text>
           <View style={styles.optionsContainer}>
-            {airOptions.map((option, index) => (
+            {sleepOptions.map((option, index) => (
               <TouchableOpacity
                 key={`q3-${index}`}
                 style={[styles.option, selectedOption3 === index && styles.selectedOption]}
@@ -108,9 +155,9 @@ export default function Rest({ onBack, onNext, onProfile, onFavorites, onHome }:
           <View style={styles.lineWrapper}>
             <View style={styles.line} />
             <View style={styles.lineContainer}>
-              {airOptions.map((_, index) => (
+              {sleepOptions.map((_, index) => (
                 <TouchableOpacity
-                  key={`q3-${index}`}
+                  key={`q3-dot-${index}`}
                   style={[styles.dot, selectedOption3 === index && styles.selectedDot]}
                   onPress={() => setSelectedOption3(index)}
                 />
@@ -119,11 +166,11 @@ export default function Rest({ onBack, onNext, onProfile, onFavorites, onHome }:
           </View>
         </View>
 
-        {/* Pergunta 4 */}
+        {/* Pergunta 4 - Dormir antes da meia-noite */}
         <View style={styles.questionBox}>
           <Text style={styles.questionText}>Você costuma dormir antes da meia-noite?</Text>
           <View style={styles.optionsContainer}>
-            {airOptions.map((option, index) => (
+            {sleepOptions.map((option, index) => (
               <TouchableOpacity
                 key={`q4-${index}`}
                 style={[styles.option, selectedOption4 === index && styles.selectedOption]}
@@ -136,9 +183,9 @@ export default function Rest({ onBack, onNext, onProfile, onFavorites, onHome }:
           <View style={styles.lineWrapper}>
             <View style={styles.line} />
             <View style={styles.lineContainer}>
-              {airOptions.map((_, index) => (
+              {sleepOptions.map((_, index) => (
                 <TouchableOpacity
-                  key={`q4-${index}`}
+                  key={`q4-dot-${index}`}
                   style={[styles.dot, selectedOption4 === index && styles.selectedDot]}
                   onPress={() => setSelectedOption4(index)}
                 />
@@ -153,7 +200,7 @@ export default function Rest({ onBack, onNext, onProfile, onFavorites, onHome }:
             <Image source={require('../../assets/setaEsquerda.png')} style={styles.navArrow} />
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={onNext}>
+          <TouchableOpacity onPress={handleNext}>
             <Image source={require('../../assets/setaDireita.png')} style={styles.navArrow} />
           </TouchableOpacity>
         </View>
@@ -163,6 +210,7 @@ export default function Rest({ onBack, onNext, onProfile, onFavorites, onHome }:
   );
 }
 
+// Mantenha os mesmos estilos
 const styles = StyleSheet.create({
   container: {
     paddingBottom: 40,

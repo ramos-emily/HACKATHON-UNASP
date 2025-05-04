@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, Alert } from 'react-native';
 import Footer from '../../components/Footer';
+import { saveQuizResult } from '../../services/mockStorage';
 
 interface NutriProps {
   onBack: () => void;
@@ -50,6 +51,50 @@ export default function Nutrition({ onBack, onNext, onProfile, onFavorites, onHo
     { label: 'Um', icon: require('../../assets/1.png') },
     { label: 'Nenhuma' }, // sem imagem
   ];
+  const calculateScore = () => {
+    let score = 0;
+    
+    // Pontuação para a pergunta 1 (frequência de alimentos saudáveis)
+    if (selectedOption1 !== null) {
+      // Quanto maior a frequência, maior a pontuação (0 a 4)
+      score += selectedOption1 * 5; // Multiplicador para dar mais peso
+    }
+    
+    // Pontuação para a pergunta 2 (tipo de alimentação)
+    if (selectedOption2 !== null) {
+      // Quanto mais vegetariano, maior a pontuação (0 a 4)
+      score += (4 - selectedOption2) * 7; // Invertido e com peso maior
+    }
+    
+    // Pontuação para a pergunta 3 (junk food)
+    if (selectedOption3 !== null) {
+      // Quanto menos junk food, maior a pontuação (0 a 4)
+      score += (4 - selectedOption3) * 6; // Invertido
+    }
+    
+    return score;
+  };
+
+  const handleNext = () => {
+    if (selectedOption1 === null || selectedOption2 === null || selectedOption3 === null) {
+      Alert.alert('Atenção', 'Por favor, responda todas as perguntas');
+      return;
+    }
+  
+    const result = {
+      answers: {
+        frequency: frequencyOptions[selectedOption1],
+        foodType: foodTypeOptions[selectedOption2].label,
+        junkFood: junkFoodOptions[selectedOption3].label
+      },
+      score: calculateScore()
+    };
+  
+    saveQuizResult('nutrition', result);
+    
+    if (onNext) onNext();
+  };
+
 
   return (
     <View>
@@ -121,11 +166,13 @@ export default function Nutrition({ onBack, onNext, onProfile, onFavorites, onHo
             <Image source={require('../../assets/setaEsquerda.png')} style={styles.navArrow} />
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={onNext}>
+          <TouchableOpacity onPress={handleNext}>
             <Image source={require('../../assets/setaDireita.png')} style={styles.navArrow} />
           </TouchableOpacity>
         </View>
       </ScrollView>
+
+      <Footer onProfile={onProfile} onHome={onHome} onFavorites={onFavorites} />
     </View>
   );
 }

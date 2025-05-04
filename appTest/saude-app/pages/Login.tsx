@@ -9,6 +9,7 @@ import {
   Platform,
   Image 
 } from 'react-native';
+import { mockAuth as auth } from '../services/mockAuth';
 
 interface LoginProps {
   onLogin: () => void;
@@ -21,16 +22,16 @@ export default function Login({ onLogin, onSignup }: LoginProps) {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = () => {
-    if (!email || !password) {
-      alert('Por favor, preencha todos os campos');
-      return;
-    }
+  const handleLogin = async () => {
     setIsLoading(true);
-    setTimeout(() => {
+    try {
+      await auth.signInWithEmailAndPassword(email, password);
+      onLogin(); // Navega para Home
+    } catch (error) {
+      console.log('Erro simulado (não se preocupe)');
+    } finally {
       setIsLoading(false);
-      onLogin();
-    }, 1500);
+    }
   };
 
   return (

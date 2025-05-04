@@ -1,8 +1,8 @@
-// Favorites.tsx
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
 import ResultItem from '../components/Favorito';
 import Footer from '../components/Footer';
+import { getQuizResults, calculateTotalScore } from '../services/mockStorage';
 
 interface FavoritesProps {
   onProfile: () => void;
@@ -10,191 +10,182 @@ interface FavoritesProps {
   onFavorites: () => void;
 }
 
+// Valores ideais para cada categoria
+const idealScores = {
+  nutrition: '25',
+  water: '20',
+  exercise: '20',
+  sun: '15',
+  trust: '15',
+  rest: '15',
+  temperance: '10',
+  cleanAir: '10'
+};
+
+// Ícones para cada categoria
+const categoryIcons = {
+  nutrition: require('../assets/iconMaca.png'),
+  water: require('../assets/iconWater.png'),
+  exercise: require('../assets/iconCruz.png'),
+  sun: require('../assets/iconSol.png'),
+  trust: require('../assets/iconCoracao.png'),
+  rest: require('../assets/iconLua.png'),
+  temperance: require('../assets/iconJustica.png'),
+  cleanAir: require('../assets/iconAr.png')
+};
+
 export default function Favorites({ onProfile, onHome, onFavorites }: FavoritesProps) {
-  return (
-    <View>
-    <ScrollView contentContainerStyle={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <Image source={require('../assets/resultados_header.png')} style={styles.icon} />
-      </View>
+  const [results, setResults] = useState<any>({});
+  const [totalScore, setTotalScore] = useState(0);
+  const [bodyAnalysis, setBodyAnalysis] = useState<any>(null);
 
-      {/* Total */}
-      <View style={styles.totalContainer}>
-        <View style={styles.resultadosBox}>
-          <Text style={styles.headerTitle}>RESULTADOS</Text>
-        </View>
-        <Text style={styles.totalLabel}>TOTAL</Text>
-        <View style={styles.totalBox}>
-        <ResultItem
-        imageSource={require('../assets/LogoFavorites.png')}
-        title=""
-        value="/150"
-
-      />
-        </View>
-      </View>
-
-      <View style={styles.dividerLine} />
-
-      <Text style={styles.sectionTitle}>ANÁLISES CORPORAIS</Text>
-
-      {/* Itens */}
-      <ResultItem
-        imageSource={require('../assets/pressao.png')}
-        title="Pressão Arterial"
-        value="12/8"
-      />
-
-      <ResultItem
-        imageSource={require('../assets/imc.png')}
-        title="IMC"
-        value="12.5 a 24.9"
-        idealText=""
-      />
-
-      <ResultItem
-        imageSource={require('../assets/peso.png')}
-        title="PCI"
-        value="Variável"
-      />
-
-      <ResultItem
-        imageSource={require('../assets/cintura.png')}
-        title="RCQ"
-        value="M = 0.85"
-      />
-
-      <ResultItem
-        imageSource={require('../assets/arcabouco.png')}
-        title="Arcabouço Corporal"
-        value="Variável"
-      />
-
-      <View style={styles.dividerLine} />
-      <Text style={styles.sectionTitle}>POR CATEGORIA</Text>
-
-      <ResultItem
-        imageSource={require('../assets/iconWater.png')}
-        title=""
-        value="15"
-      />
-      <ResultItem
-        imageSource={require('../assets/iconAr.png')}
-        title=""
-        value="10"
-      />
-      <ResultItem
-        imageSource={require('../assets/iconMaca.png')}
-        title=""
-        value="15"
-      />
-      <ResultItem
-        imageSource={require('../assets/iconSol.png')}
-        title=""
-        value="10"
-      />
-      <ResultItem
-        imageSource={require('../assets/iconJustica.png')}
-        title=""
-        value="40"
-      />
-      <ResultItem
-        imageSource={require('../assets/iconCoracao.png')}
-        title=""
-        value="15"
-      />
-      <ResultItem
-        imageSource={require('../assets/iconLua.png')}
-        title=""
-        value="20"
-      />
-      <ResultItem
-        imageSource={require('../assets/iconCruz.png')}
-        title=""
-        value="25"
-      />
-    </ScrollView>
-    <Footer onProfile={onProfile} onHome={onHome} onFavorites={onFavorites} />
-    </View>
+  useEffect(() => {
+    const quizData = getQuizResults();
+    setResults(quizData);
+    setTotalScore(calculateTotalScore());
     
+    // Obtém os dados de análise corporal da página Exercise
+    if (quizData.exercise?.bodyAnalysis) {
+      setBodyAnalysis(quizData.exercise.bodyAnalysis);
+    }
+  }, []);
+
+  // Dados padrão caso não tenha sido preenchido o questionário
+  const defaultBodyAnalysis = {
+    pressureClassification: '--',
+    imcClassification: '--',
+    imc: '--',
+    rcqClassification: '--',
+    rcq: '--',
+    frame: '--'
+  };
+
+  const currentAnalysis = bodyAnalysis || defaultBodyAnalysis;
+
+  return (
+    <View style={styles.mainContainer}>
+      <ScrollView contentContainerStyle={styles.container}>
+        <View style={styles.header}>
+          <Image source={require('../assets/resultados_header.png')} style={styles.headerIcon} />
+        </View>
+
+        <View style={styles.totalContainer}>
+          <View style={styles.resultadosBox}>
+            <Text style={styles.headerTitle}>RESULTADOS</Text>
+          </View>
+          <Text style={styles.totalLabel}>TOTAL</Text>
+          <ResultItem
+            imageSource={require('../assets/LogoFavorites.png')}
+            title=""
+            value={`${totalScore}`}
+            idealText="150"
+          />
+        </View>
+
+        <View style={styles.divider} />
+
+        <Text style={styles.sectionTitle}>ANÁLISES CORPORAIS</Text>
+        <ResultItem 
+          imageSource={require('../assets/pressao.png')} 
+          title="Pressão Arterial" 
+          value={currentAnalysis.pressureClassification}
+          idealText="Normal"
+        />
+        <ResultItem 
+          imageSource={require('../assets/imc.png')} 
+          title="IMC" 
+          value={currentAnalysis.imcClassification}
+          idealText={`${currentAnalysis.imc} (Normal)`}
+        />
+        <ResultItem 
+          imageSource={require('../assets/peso.png')} 
+          title="PCI" 
+          value={currentAnalysis.rcqClassification}
+          idealText={`${currentAnalysis.rcq} (Normal)`}
+        />
+        <ResultItem 
+          imageSource={require('../assets/cintura.png')} 
+          title="RCQ" 
+          value={currentAnalysis.rcqClassification}
+          idealText="<0.85"
+        />
+
+        <View style={styles.divider} />
+        <Text style={styles.sectionTitle}>POR CATEGORIA</Text>
+        
+        {/* Exibe apenas os questionários respondidos */}
+        {Object.entries(results).map(([quizName, quizData]: [string, any]) => (
+          <ResultItem
+            key={quizName}
+            imageSource={categoryIcons[quizName as keyof typeof categoryIcons]}
+            title={quizName.charAt(0).toUpperCase() + quizName.slice(1).replace(/([A-Z])/g, ' $1')}
+            value={`${quizData.score || '--'}`}
+            idealText={idealScores[quizName as keyof typeof idealScores]}
+          />
+        ))}
+      </ScrollView>
+      
+      <Footer onProfile={onProfile} onHome={onHome} onFavorites={onFavorites} />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  mainContainer: {
+    flex: 1,
     backgroundColor: '#d7f0ff',
-    alignItems: 'stretch',
+  },
+  container: {
+    paddingBottom: 20,
   },
   header: {
-    width: '100%',
-    height: 75,
-    backgroundColor: '#ffffff',
-    alignItems: 'center',
+    height: 80,
     justifyContent: 'center',
-    marginBottom: 20,
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    marginBottom: 10,
   },
-  icon: {
-    width: 100,
-    height: 100,
+  headerIcon: {
+    width: 200,
+    height: 60,
     resizeMode: 'contain',
   },
   resultadosBox: {
     backgroundColor: '#007ED5',
-    paddingHorizontal: 70,
     paddingVertical: 10,
-    width: '90%',
     borderRadius: 20,
+    marginBottom: 15,
+    width: '80%',
     alignSelf: 'center',
-    marginBottom: 20,
   },
   headerTitle: {
-    fontSize: 25,
+    fontSize: 22,
     fontWeight: 'bold',
     color: 'white',
     textAlign: 'center',
   },
-  totalLabel: {
-    fontSize: 20,
-    color: '#003878',
-    marginBottom: 16,
-    fontWeight: '600',
-  },
   totalContainer: {
-    padding: 16,
-    borderRadius: 12,
     alignItems: 'center',
-    marginBottom: 32,
-    backgroundColor: '#d7f0ff',
+    marginVertical: 10,
   },
-  
-  totalBox: {
-    flexDirection: 'row',
-    alignItems: 'baseline',
-  },
-  totalText: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#333',
-  },
-  totalMax: {
+  totalLabel: {
     fontSize: 18,
-    marginLeft: 4,
-    color: '#333',
+    color: '#003878',
+    fontWeight: '600',
+    marginBottom: 5,
+  },
+  divider: {
+    height: 1,
+    backgroundColor: '#007ED5',
+    marginVertical: 15,
+    width: '90%',
+    alignSelf: 'center',
   },
   sectionTitle: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
     color: '#003878',
-    marginBottom: 12,
     textAlign: 'center',
-  },
-  dividerLine: {
-    height: 15,
-    borderRadius: 10,
-    backgroundColor: '#007ED5',
-    width: '97%',
-    alignSelf: 'center',
-    marginVertical: 20,
+    marginVertical: 10,
   },
 });

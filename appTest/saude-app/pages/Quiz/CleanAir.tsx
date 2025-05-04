@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { View, Image, StyleSheet, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Image, StyleSheet, Text, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import Footer from '../../components/Footer';
+import { saveQuizResult } from '../../services/mockStorage';
 
 interface AirProps {
   onBack: () => void;
@@ -15,34 +16,61 @@ export default function AirHeader({ onBack, onNext, onProfile, onFavorites, onHo
   const [selectedOption2, setSelectedOption2] = useState<number | null>(null);
 
   const airOptions = [
-    { label: 'Muito Ruim', icon: require('../../assets/muito_ruim.png') },
-    { label: 'Ruim', icon: require('../../assets/ruim.png') },
-    { label: 'Regular', icon: require('../../assets/regular.png') },
-    { label: 'Boa', icon: require('../../assets/boa.png') },
-    { label: 'Muito Boa', icon: require('../../assets/muito_boa.png') },
+    { label: 'Muito Ruim', icon: require('../../assets/muito_ruim.png'), value: 0 },
+    { label: 'Ruim', icon: require('../../assets/ruim.png'), value: 1 },
+    { label: 'Regular', icon: require('../../assets/regular.png'), value: 2 },
+    { label: 'Boa', icon: require('../../assets/boa.png'), value: 3 },
+    { label: 'Muito Boa', icon: require('../../assets/muito_boa.png'), value: 4 },
   ];
 
   const breathingOptions = [
-    { label: 'Nunca' },
-    { label: 'Raramente' },
-    { label: 'Algumas vezes' },
-    { label: 'Muitas vezes' },
-    { label: 'Sempre' },
+    { label: 'Nunca', value: 0 },
+    { label: 'Raramente', value: 1 },
+    { label: 'Algumas vezes', value: 2 },
+    { label: 'Muitas vezes', value: 3 },
+    { label: 'Sempre', value: 4 },
   ];
+
+  const calculateScore = () => {
+    let score = 0;
+    
+    if (selectedOption1 !== null) {
+      score += airOptions[selectedOption1].value * 5;
+    }
+    
+    if (selectedOption2 !== null) {
+      score += breathingOptions[selectedOption2].value * 5;
+    }
+    
+    return score;
+  };
+
+  const handleNext = () => {
+    if (selectedOption1 === null || selectedOption2 === null) {
+      Alert.alert('Atenção', 'Por favor, responda todas as perguntas');
+      return;
+    }
+  
+    const result = {
+      answers: {
+        airQuality: airOptions[selectedOption1].label,
+        breathingPractice: breathingOptions[selectedOption2].label
+      },
+      score: calculateScore()
+    };
+  
+    saveQuizResult('cleanAir', result);
+    
+    if (onNext) onNext();
+  };
 
   return (
     <View>
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.iconBackground}>
-          <Image
-            source={require('../../assets/air_icon.png')}
-            style={styles.icon}
-          />
+          <Image source={require('../../assets/air_icon.png')} style={styles.icon} />
         </View>
-        <Image
-          source={require('../../assets/air_pure.png')}
-          style={styles.banner}
-        />
+        <Image source={require('../../assets/air_pure.png')} style={styles.banner} />
 
         {/* Pergunta 1 */}
         <View style={styles.questionBox}>
@@ -115,7 +143,7 @@ export default function AirHeader({ onBack, onNext, onProfile, onFavorites, onHo
             <Image source={require('../../assets/setaEsquerda.png')} style={styles.navArrow} />
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={onNext}>
+          <TouchableOpacity onPress={handleNext}>
             <Image source={require('../../assets/setaDireita.png')} style={styles.navArrow} />
           </TouchableOpacity>
         </View>
@@ -125,6 +153,7 @@ export default function AirHeader({ onBack, onNext, onProfile, onFavorites, onHo
   );
 }
 
+// Mantenha os mesmos estilos que você já tem
 const styles = StyleSheet.create({
   container: {
     paddingBottom: 40,

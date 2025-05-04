@@ -8,23 +8,30 @@ interface ResultItemProps {
   idealText?: string;
 }
 
-const ResultItem: React.FC<ResultItemProps> = ({ imageSource, title, value, idealText }) => {
+const ResultItem: React.FC<ResultItemProps> = ({ 
+  imageSource, 
+  title, 
+  value, 
+  idealText
+}) => {
   return (
     <View style={styles.container}>
+      {/* Ícone à esquerda */}
       <View style={styles.imageContainer}>
         <Image source={imageSource} style={styles.image} />
       </View>
 
+      {/* Título e retângulo branco no meio */}
       <View style={styles.middleContainer}>
         <Text style={styles.title}>{title}</Text>
-        <View style={styles.whiteBox} />
+        <View style={styles.whiteBox}>
+          <Text style={styles.boxValue}>{value}</Text>
+        </View>
       </View>
 
+      {/* Valor ideal à direita */}
       <View style={styles.rightContainer}>
-        {value.split('\n').map((line, index) => (
-          <Text key={index} style={styles.value}>{line}</Text>
-        ))}
-        {idealText && <Text style={styles.idealText}>{idealText}</Text>}
+        <Text style={styles.idealText}>{idealText}</Text>
       </View>
     </View>
   );
@@ -61,12 +68,19 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   whiteBox: {
-    width: 120,
-    height: 30,
+    width: 140,
+    height: 40,
     backgroundColor: '#fff',
     borderRadius: 10,
     borderWidth: 2,
     borderColor: '#ccc',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  boxValue: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#000',
   },
   rightContainer: {
     minWidth: 80,
@@ -74,17 +88,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginLeft: 8,
   },
-  value: {
-    fontSize: 26,
-    fontWeight: 'bold',
-    color: '#000',
-  },
   idealText: {
     fontSize: 16,
     color: '#555',
     fontStyle: 'italic',
-    marginTop: 4,
-    textAlign: 'center',
   },
 });
 

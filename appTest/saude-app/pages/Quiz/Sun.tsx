@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Image, Alert } from 'react-native';
 import Footer from '../../components/Footer';
+import { saveQuizResult } from '../../services/mockStorage';
 
 interface SunProps {
   onBack: () => void;
@@ -14,7 +15,50 @@ export default function Sol({ onBack, onNext, onProfile, onFavorites, onHome }: 
   const [selectedOption1, setSelectedOption1] = useState<number | null>(null);
   const [selectedOption2, setSelectedOption2] = useState<number | null>(null);
 
-  const options = ['Nunca', 'Raramente', 'Às vezes', 'Frequentemente', 'Sempre'];
+  const options = [
+    { label: 'Nunca', value: 0 },
+    { label: 'Raramente', value: 1 },
+    { label: 'Às vezes', value: 2 },
+    { label: 'Frequentemente', value: 3 },
+    { label: 'Sempre', value: 4 }
+  ];
+
+  const calculateScore = () => {
+    let score = 0;
+    
+    // Pontuação para exposição ao sol (ótimo entre 2-3 vezes/semana)
+    if (selectedOption1 !== null) {
+      // Máximo para "Às vezes" (valor 2), reduzindo para extremos
+      score += Math.abs(2 - options[selectedOption1].value) === 0 ? 30 : 
+               Math.abs(2 - options[selectedOption1].value) === 1 ? 25 : 15;
+    }
+    
+    // Pontuação para luz natural em casa (quanto mais, melhor)
+    if (selectedOption2 !== null) {
+      score += options[selectedOption2].value * 10;
+    }
+    
+    return score;
+  };
+
+  const handleNext = () => {
+    if (selectedOption1 === null || selectedOption2 === null) {
+      Alert.alert('Atenção', 'Por favor, responda todas as perguntas');
+      return;
+    }
+  
+    const result = {
+      answers: {
+        sunExposure: options[selectedOption1].label,
+        naturalLight: options[selectedOption2].label
+      },
+      score: calculateScore()
+    };
+  
+    saveQuizResult('sun', result);
+    
+    if (onNext) onNext();
+  };
 
   return (
     <View>
@@ -24,7 +68,7 @@ export default function Sol({ onBack, onNext, onProfile, onFavorites, onHome }: 
         </View>
         <Image source={require('../../assets/sun_banner.png')} style={styles.banner} />
 
-        {/* Pergunta 1 */}
+        {/* Pergunta 1 - Exposição ao sol */}
         <View style={styles.questionBox}>
           <Text style={styles.questionText}>
             Com que frequência você se expõe ao sol por pelo menos 15 minutos, sem o uso de protetor solar?
@@ -32,8 +76,12 @@ export default function Sol({ onBack, onNext, onProfile, onFavorites, onHome }: 
 
           <View style={styles.optionsContainer}>
             {options.map((option, index) => (
-              <TouchableOpacity key={index} style={styles.option} onPress={() => setSelectedOption1(index)}>
-                <Text style={styles.optionLabel}>{option}</Text>
+              <TouchableOpacity 
+                key={`q1-${index}`}
+                style={[styles.option, selectedOption1 === index && styles.selectedOption]}
+                onPress={() => setSelectedOption1(index)}
+              >
+                <Text style={styles.optionLabel}>{option.label}</Text>
               </TouchableOpacity>
             ))}
           </View>
@@ -43,7 +91,7 @@ export default function Sol({ onBack, onNext, onProfile, onFavorites, onHome }: 
             <View style={styles.lineContainer}>
               {options.map((_, index) => (
                 <TouchableOpacity
-                  key={index}
+                  key={`q1-dot-${index}`}
                   style={[styles.dot, selectedOption1 === index && styles.selectedDot]}
                   onPress={() => setSelectedOption1(index)}
                 />
@@ -52,7 +100,7 @@ export default function Sol({ onBack, onNext, onProfile, onFavorites, onHome }: 
           </View>
         </View>
 
-        {/* Pergunta 2 */}
+        {/* Pergunta 2 - Luz natural */}
         <View style={styles.questionBox}>
           <Text style={styles.questionText}>
             Em sua casa, as janelas e persianas são abertas diariamente para que entrem sol e luz natural?
@@ -60,8 +108,12 @@ export default function Sol({ onBack, onNext, onProfile, onFavorites, onHome }: 
 
           <View style={styles.optionsContainer}>
             {options.map((option, index) => (
-              <TouchableOpacity key={index} style={styles.option} onPress={() => setSelectedOption2(index)}>
-                <Text style={styles.optionLabel}>{option}</Text>
+              <TouchableOpacity 
+                key={`q2-${index}`}
+                style={[styles.option, selectedOption2 === index && styles.selectedOption]}
+                onPress={() => setSelectedOption2(index)}
+              >
+                <Text style={styles.optionLabel}>{option.label}</Text>
               </TouchableOpacity>
             ))}
           </View>
@@ -71,7 +123,7 @@ export default function Sol({ onBack, onNext, onProfile, onFavorites, onHome }: 
             <View style={styles.lineContainer}>
               {options.map((_, index) => (
                 <TouchableOpacity
-                  key={index}
+                  key={`q2-dot-${index}`}
                   style={[styles.dot, selectedOption2 === index && styles.selectedDot]}
                   onPress={() => setSelectedOption2(index)}
                 />
@@ -86,7 +138,7 @@ export default function Sol({ onBack, onNext, onProfile, onFavorites, onHome }: 
             <Image source={require('../../assets/setaEsquerda.png')} style={styles.navArrow} />
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={onNext}>
+          <TouchableOpacity onPress={handleNext}>
             <Image source={require('../../assets/setaDireita.png')} style={styles.navArrow} />
           </TouchableOpacity>
         </View>
@@ -144,6 +196,12 @@ const styles = StyleSheet.create({
   option: {
     alignItems: 'center',
     flex: 1,
+    padding: 8,
+    borderRadius: 8,
+    backgroundColor: '#fff',
+  },
+  selectedOption: {
+    backgroundColor: '#FFECB3',
   },
   optionLabel: {
     fontSize: 12,

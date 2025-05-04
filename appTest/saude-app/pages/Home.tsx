@@ -48,7 +48,7 @@ export default function TelaHome({ onProfile, onHome, onFavorites, onNavigation 
           </TouchableOpacity>
           <TouchableOpacity style={styles.botaoCf} onPress={() => onNavigation('Trust')}>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.botaoPlay} onPress={() => onNavigation('Trust')}>
+          <TouchableOpacity style={styles.botaoPlay} onPress={() => onNavigation('Nutrition')}>
           </TouchableOpacity>
         </ImageBackground>
 
