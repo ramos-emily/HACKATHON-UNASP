@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -9,21 +9,31 @@ import {
   Modal,
   Animated,
 } from 'react-native';
+import { mockAuth } from '../services/mockAuth'; 
 
 interface ProfileProps {
   onBack: () => void;
-  user: string;
   onSave: () => void;
 }
 
-export default function Profile({ onBack, user, onSave }: ProfileProps) {
+export default function Profile({ onBack, onSave }: ProfileProps) {
   const [birthDate, setBirthDate] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [sex, setSex] = useState('');
-  const [name, setName] = useState(user);
+  const [name, setName] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const scaleValue = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (mockAuth.currentUser) {
+      setName(mockAuth.currentUser.displayName || '');
+      setEmail(mockAuth.currentUser.email || '');
+      setPhone(mockAuth.currentUser.phoneNumber || '');
+      setBirthDate(mockAuth.currentUser.birthDate || '');
+      setSex(mockAuth.currentUser.sex || '');
+    }
+  }, []);
 
   const openModal = () => {
     setModalVisible(true);
@@ -55,40 +65,27 @@ export default function Profile({ onBack, user, onSave }: ProfileProps) {
   };
 
   const handlePhoneChange = (text: string) => {
-    let cleanText = text.replace(/[^\d]/g, '');
-    if (cleanText.length <= 11) {
-      if (cleanText.length > 2 && cleanText.length <= 6) {
-        cleanText = `(${cleanText.slice(0, 2)}) ${cleanText.slice(2)}`;
-      } else if (cleanText.length > 6) {
-        cleanText = `(${cleanText.slice(0, 2)}) ${cleanText.slice(2, 7)}-${cleanText.slice(7, 11)}`;
-      }
-      setPhone(cleanText);
-    }
+    let cleaned = text.replace(/\D/g, '');
   };
 
   const handleBirthDateChange = (text: string) => {
-    const cleanText = text.replace(/[^0-9]/g, '');
-    if (cleanText.length <= 10) {
-      let formattedDate = cleanText;
-      if (formattedDate.length > 2) {
-        formattedDate = `${formattedDate.slice(0, 2)}-${formattedDate.slice(2)}`;
-      }
-      if (formattedDate.length > 5) {
-        formattedDate = `${formattedDate.slice(0, 5)}-${formattedDate.slice(5)}`;
-      }
-      setBirthDate(formattedDate);
-    }
+    const cleaned = text.replace(/\D/g, '').slice(0, 8); // Máximo de 8 números
+
+    let formatted = '';
   };
 
   const handleSave = () => {
+    // Simula salvar as informações no "banco" (mockAuth)
+    if (mockAuth.currentUser) {
+      mockAuth.currentUser.displayName = name;
+      mockAuth.currentUser.email = email;
+      mockAuth.currentUser.phoneNumber = phone;
+      mockAuth.currentUser.birthDate = birthDate;
+      mockAuth.currentUser.sex = sex;
+    }
+  
     alert('Informações salvas!');
     onSave(); // Redireciona para a Home
-  };
-
-  const resetName = () => {
-    if (name === '') {
-      setName(user);
-    }
   };
 
   return (
@@ -96,6 +93,7 @@ export default function Profile({ onBack, user, onSave }: ProfileProps) {
       <View style={styles.header}>
         <Text style={styles.headerText}>SEU PERFIL</Text>
       </View>
+
       {/* Avatar */}
       <View style={styles.avatarContainer}>
         <View style={styles.avatarPlaceholder}>
@@ -114,11 +112,9 @@ export default function Profile({ onBack, user, onSave }: ProfileProps) {
             style={styles.input}
             value={name}
             onChangeText={handleNameChange}
-            onBlur={resetName}
           />
           <Text style={styles.editText}>Editar</Text>
         </View>
-
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Data de nascimento</Text>
           <TextInput
@@ -127,6 +123,7 @@ export default function Profile({ onBack, user, onSave }: ProfileProps) {
             value={birthDate}
             onChangeText={handleBirthDateChange}
             maxLength={10}
+            keyboardType="number-pad"
           />
           <Text style={styles.editText}>Editar</Text>
         </View>
@@ -175,9 +172,10 @@ export default function Profile({ onBack, user, onSave }: ProfileProps) {
         </View>
       </View>
 
+      {/* Modal do Avatar */}
       <Modal transparent visible={modalVisible}>
         <View style={styles.modalBackground}>
-          <Animated.View style={[styles.zoomedAvatar, { transform: [{ scale: scaleValue }] }]} >
+          <Animated.View style={[styles.zoomedAvatar, { transform: [{ scale: scaleValue }] }]}>
             <TouchableOpacity style={{ flex: 1 }} onPress={closeModal}>
               <Image
                 source={{ uri: 'https://via.placeholder.com/300' }}
