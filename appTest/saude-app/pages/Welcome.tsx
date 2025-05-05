@@ -64,15 +64,15 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: '#003878',
-    paddingHorizontal: 16,
+    paddingHorizontal: 14,
     paddingVertical: 5,
     borderRadius: 5,
-    width: '22%',
+    width: '20%',
     alignItems: 'center',
   },
   buttonText: {
     color: '#fff',
-    fontSize: 24,
+    fontSize: 20,
     fontFamily: 'Inter-Regular.ttf',  
   },
 });

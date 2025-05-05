@@ -97,8 +97,8 @@ export default function Nutrition({ onBack, onNext, onProfile, onFavorites, onHo
 
 
   return (
-    <View>
-      <ScrollView contentContainerStyle={styles.container}>
+    <View style={styles.mainContainer}>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.iconBackground}>
           <Image source={require('../../assets/nutrition_icon.png')} style={styles.icon} />
         </View>
@@ -178,9 +178,14 @@ export default function Nutrition({ onBack, onNext, onProfile, onFavorites, onHo
 }
 
 const styles = StyleSheet.create({
-  container: {
+  mainContainer: {
+    flex: 1,
+    justifyContent: 'space-between',
+  },
+  scrollContainer: {
     paddingBottom: 20,
     alignItems: 'center',
+    flexGrow: 1,
   },
   iconBackground: {
     width: '100%',

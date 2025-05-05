@@ -82,8 +82,8 @@ export default function Trust({ onBack, onNext, onProfile, onFavorites, onHome }
   };
 
   return (
-    <View>
-      <ScrollView contentContainerStyle={styles.container}>
+    <View style={styles.mainContainer}>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.iconBackground}>
           <Image source={require('../../assets/iconCruz.png')} style={styles.icon} />
         </View>
@@ -246,9 +246,14 @@ export default function Trust({ onBack, onNext, onProfile, onFavorites, onHome }
 }
 
 const styles = StyleSheet.create({
-  container: {
+  mainContainer: {
+    flex: 1,
+    justifyContent: 'space-between',
+  },
+  scrollContainer: {
     paddingBottom: 20,
     alignItems: 'center',
+    flexGrow: 1,
   },
   iconBackground: {
     width: '100%',

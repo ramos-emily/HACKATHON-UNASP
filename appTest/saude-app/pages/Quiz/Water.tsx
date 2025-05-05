@@ -87,8 +87,8 @@ export default function Water({ onBack, onNext, onProfile, onHome, onFavorites }
   };
 
   return (
-    <View>
-      <ScrollView contentContainerStyle={styles.container}>
+    <View style={styles.mainContainer}>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.iconBackground}>
           <Image source={require('../../assets/header-icon.png')} style={styles.icon} />
         </View>
@@ -197,9 +197,14 @@ export default function Water({ onBack, onNext, onProfile, onHome, onFavorites }
 }
 
 const styles = StyleSheet.create({
-  container: {
+  mainContainer: {
+    flex: 1,
+    justifyContent: 'space-between',
+  },
+  scrollContainer: {
     alignItems: 'center',
     paddingBottom: 20,
+    flexGrow: 1,
   },
   iconBackground: {
     width: '100%',

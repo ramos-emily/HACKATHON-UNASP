@@ -89,8 +89,8 @@ export default function Temperanca({ onBack, onNext, onProfile, onFavorites, onH
   };
 
   return (
-    <View>
-      <ScrollView contentContainerStyle={styles.container}>
+    <View style={styles.mainContainer}>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
         {/* Cabeçalho */}
         <View style={styles.header}>
           <Image source={require('../../assets/temperance_icon.png')} style={styles.icon} />
@@ -229,9 +229,14 @@ export default function Temperanca({ onBack, onNext, onProfile, onFavorites, onH
 }
 
 const styles = StyleSheet.create({
-  container: {
+  mainContainer: {
+    flex: 1,
+    justifyContent: 'space-between',
+  },
+  scrollContainer: {
     alignItems: 'center',
     paddingBottom: 40,
+    flexGrow: 1,
   },
   header: {
     backgroundColor: '#D3F0FF',
