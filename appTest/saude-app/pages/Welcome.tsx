@@ -67,12 +67,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 5,
     borderRadius: 5,
-    width: '20%',
+    width: '30%',
     alignItems: 'center',
   },
   buttonText: {
     color: '#fff',
-    fontSize: 20,
+    fontSize: 18,
     fontFamily: 'Inter-Regular.ttf',  
   },
 });

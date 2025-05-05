@@ -1,3 +1,13 @@
 eas update --branch production --message "Correção de layout"
 
+INSTALAR DE NOVO
 
+npm i
+npm install -g eas-cli
+npm install @expo/config-plugins
+
+
+eas login  # Autentique-se
+eas init   # Crie/atualize eas.json
+
+eas update --branch production --message "Minhas alterações"

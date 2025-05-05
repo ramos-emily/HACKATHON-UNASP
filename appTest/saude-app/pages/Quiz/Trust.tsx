@@ -203,7 +203,7 @@ export default function Trust({ onBack, onNext, onProfile, onFavorites, onHome }
 
         {/* Pergunta 5 - Preocupação com a morte */}
         <View style={styles.questionBox}>
-          <Text style={styles.questionText}>Você fica preocupado ou com medo do que irá acontecer comigo quando morrer?</Text>
+          <Text style={styles.questionText}>Você fica preocupado ou com medo do que irá acontecer consigo mesmo quando morrer?</Text>
           <View style={styles.optionsContainer}>
             {options.map((option, index) => (
               <TouchableOpacity 
