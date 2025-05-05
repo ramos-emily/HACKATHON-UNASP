@@ -13,7 +13,11 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.emily.saudeapp",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -36,7 +40,6 @@
     },
     "updates": {
       "url": "https://u.expo.dev/5cae90a8-b1f2-4496-a6a0-4e18d6ea184b"
-    },
-    "owner": "emis_ramos"
+    }
   }
 }
